@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import UserMenu from "./subcomponents/UserMenu";
 
 const styles = {
   navbarBrand: {
@@ -12,6 +13,7 @@ const styles = {
   logo: {
     paddingLeft: '5px',
     paddingRight: '5px',
+    minHeight: '90%'
   }
 };
 
@@ -35,9 +37,7 @@ class Header extends Component {
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
             </ul>
-            <ul className="nav navbar-nav pull-right">
-              <li><a href="#">test</a></li>
-            </ul>
+            <UserMenu/>
           </div>
         </div>
       </nav>)
