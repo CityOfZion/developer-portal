@@ -31,7 +31,7 @@ class Header extends Component {
               <span className="icon-bar"></span>
             </button>
             <a href="#" className="navbar-brand" style={styles.navbarBrand}><img style={styles.logo} src="/images/Coz-logo.svg" />Developer<br />Portal</a></div>
-          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul className="nav navbar-nav">
               <li className="active"><a href="#">Home</a></li>
               <li><a href="#">Link</a></li>
