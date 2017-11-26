@@ -29,6 +29,5 @@ accounts-oauth
 service-configuration
 http
 percolate:synced-cron
-iron:router
 kadira:react-layout
 twbs:bootstrap
