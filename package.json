@@ -9,6 +9,7 @@
     "@slack/client": "^3.14.2",
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
+    "chart.js": "^2.7.1",
     "meteor-node-stubs": "^0.3.2",
     "prop-types": "^15.6.0",
     "react": "^15.6.1",
@@ -24,6 +25,8 @@
     "react-dom": "^15.6.1",
     "react-meteor-data": "^0.2.10",
     "react-recaptcha": "^2.3.5",
+    "react-router-dom": "^4.2.2",
+    "react-transition-group": "^1.1.2",
     "reactstrap": "^4.8.0",
     "simpl-schema": "^0.3.2"
   }
