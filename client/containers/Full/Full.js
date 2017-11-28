@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
+import PropTypes from 'prop-types';
 import { Link, Switch, Route, Redirect } from 'react-router-dom'
 import Header from '../../components/Header/';
 import Sidebar from '../../components/Sidebar/';
@@ -24,11 +26,11 @@ class Full extends Component {
   render() {
     return (
       <div className="app">
-        <Header />
+        <Header history={this.props.history} />
         <div className="app-body">
           <Sidebar {...this.props}/>
           <main className="main">
-            <Breadcrumb />
+            <Breadcrumb history={this.props.history}/>
             <div className="container-fluid">
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
@@ -56,4 +58,13 @@ class Full extends Component {
   }
 }
 
-export default Full;
+Full.propTypes = {
+  history: PropTypes.object.isRequired
+};
+
+export default FullContainer = withTracker(({ id }) => {
+  Meteor.user();
+  return {
+    currentUser: Meteor.user()
+  };
+})(Full);
