@@ -9,7 +9,7 @@ class Sidebar extends Component {
   }
 
   activeRoute(routeName) {
-    return this.props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
+    return this.props.history.location && this.props.history.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
   }
 
   // secondLevelActive(routeName) {
@@ -17,6 +17,7 @@ class Sidebar extends Component {
   // }
 
   render() {
+    console.log(this.props);
     return (
       <div className="sidebar">
         <nav className="sidebar-nav">

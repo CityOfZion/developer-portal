@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Dropdown, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class Header extends Component {
@@ -90,7 +91,7 @@ class Header extends Component {
                 <DropdownItem><i className="fa fa-file"></i> Projects<span className="badge badge-primary">42</span></DropdownItem>
                 <DropdownItem divider />
                 <DropdownItem><i className="fa fa-shield"></i> Lock Account</DropdownItem>
-                <DropdownItem><i className="fa fa-lock"></i> Logout</DropdownItem>
+                <DropdownItem onClick={e => Meteor.logout(() => this.props.history.push('/login'))}><i className="fa fa-lock"></i> Logout</DropdownItem>
 
               </DropdownMenu>
             </Dropdown>
@@ -103,5 +104,9 @@ class Header extends Component {
     )
   }
 }
+
+Header.propTypes = {
+  history: PropTypes.object.isRequired
+};
 
 export default Header;

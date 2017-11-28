@@ -30,4 +30,6 @@ service-configuration
 http
 percolate:synced-cron
 kadira:react-layout
-twbs:bootstrap
+email
+alanning:roles
+matb33:collection-hooks
