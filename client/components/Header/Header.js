@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownMenu, DropdownItem } from 'reactstrap';
+import ReactMixin from 'react-mixin';
+import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
+import Initicon from 'react-initicon';
 
 class Header extends Component {
 
@@ -9,10 +12,22 @@ class Header extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
+      subscription: {
+        unreadMessages: Meteor.subscribe('unreadMessages')
+      },
       dropdownOpen: false
     };
   }
-
+  
+  componentWillUnmount() {
+    this.state.subscription.unreadMessages.stop();
+  }
+  
+  unreadMessages() {
+    const msgs = Messages.find({messages: {$elemMatch: {read: false}}}).fetch();
+    console.log(msgs);
+    return msgs;  }
+  
   toggle() {
     this.setState({
       dropdownOpen: !this.state.dropdownOpen
@@ -40,6 +55,7 @@ class Header extends Component {
   }
 
   render() {
+    console.log(this.props, this.state);
     return (
       <header className="app-header navbar">
         <button className="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" onClick={this.mobileSidebarToggle}>&#9776;</button>
@@ -71,15 +87,19 @@ class Header extends Component {
           <li className="nav-item">
             <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
               <button onClick={this.toggle} className="nav-link dropdown-toggle" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded={this.state.dropdownOpen}>
-                <img src={'img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com"/>
-                <span className="d-md-down-none">admin</span>
+                {Meteor.user() ? <Initicon
+                  size={40}
+                  text={Meteor.user().username}
+                  seed={20}
+                  single={false}
+                /> : ''}
               </button>
 
               <DropdownMenu className="dropdown-menu-right">
                 <DropdownItem header className="text-center"><strong>Account</strong></DropdownItem>
 
                 <DropdownItem><i className="fa fa-bell-o"></i> Updates<span className="badge badge-info">42</span></DropdownItem>
-                <DropdownItem><i className="fa fa-envelope-o"></i> Messages<span className="badge badge-success">42</span></DropdownItem>
+                <DropdownItem><i className="fa fa-envelope-o"></i> Messages {this.unreadMessages().length > 0 ? <span className="badge badge-success">{this.unreadMessages().length}</span> : ''}</DropdownItem>
                 <DropdownItem><i className="fa fa-tasks"></i> Tasks<span className="badge badge-danger">42</span></DropdownItem>
                 <DropdownItem><i className="fa fa-comments"></i> Comments<span className="badge badge-warning">42</span></DropdownItem>
 
@@ -108,5 +128,7 @@ class Header extends Component {
 Header.propTypes = {
   history: PropTypes.object.isRequired
 };
+
+ReactMixin(Header.prototype, TrackerReactMixin);
 
 export default Header;
