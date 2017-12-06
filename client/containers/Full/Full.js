@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { Link, Switch, Route, Redirect } from 'react-router-dom'
-import Header from '../../components/Header/';
 import Sidebar from '../../components/Sidebar/';
 import Breadcrumb from '../../components/Breadcrumb/';
 import Aside from '../../components/Aside/';
@@ -21,12 +20,15 @@ import Tables from '../../views/Components/Tables/'
 import Tabs from '../../views/Components/Tabs/'
 import FontAwesome from '../../views/Icons/FontAwesome/'
 import SimpleLineIcons from '../../views/Icons/SimpleLineIcons/'
+import MessagesOverview from "../../../imports/ui/components/MessagesOverview";
+import Header from "../../components/Header/Header";
+import MessageThread from "../../../imports/ui/components/MessageThread";
 
 class Full extends Component {
   render() {
     return (
       <div className="app">
-        <Header history={this.props.history} />
+        <Header {...this.props} />
         <div className="app-body">
           <Sidebar {...this.props}/>
           <main className="main">
@@ -34,6 +36,8 @@ class Full extends Component {
             <div className="container-fluid">
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
+                <Route exact path="/chats" name="Chats Overview" component={MessagesOverview}/>
+                <Route path="/chats/:id" name="Chats" component={MessageThread}/>
                 <Route path="/components/buttons" name="Buttons" component={Buttons}/>
                 <Route path="/components/cards" name="Cards" component={Cards}/>
                 <Route path="/components/forms" name="Forms" component={Forms}/>

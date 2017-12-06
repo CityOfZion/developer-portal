@@ -33,8 +33,8 @@ Meteor.startup(() => {
         <Route exact path="/register" name="Register Page" render={props => <Register {...props}/>}/>
         <Route exact path="/404" name="Page 404" component={Page404}/>
         <Route exact path="/500" name="Page 500" component={Page500}/>
-        <Route path="/" name="Home" render={() => (
-          !isLoggedIn() ? <Redirect to="/login"/> : <Full history={history}/>
+        <Route path="/" name="Home" render={props => (
+          !isLoggedIn() ? <Redirect to="/login"/> : <Full {...props}/>
         )}/>
       </Switch>
     </Router>,
