@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 
 class ErrorModal extends Component {
   render() {
-    console.log('render error modal');
     return <Modal isOpen={this.props.opened} className={this.props.type ? `modal-${this.props.type}` : `modal-primary`}>
       <ModalHeader>{this.props.title}</ModalHeader>
       <ModalBody>

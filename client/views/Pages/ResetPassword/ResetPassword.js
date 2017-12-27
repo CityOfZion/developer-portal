@@ -18,7 +18,6 @@ class ResetPassword extends Component {
       passwordResetSuccess: false
     };
     
-    console.log(props);
   }
   
   passwordInput = value => {
@@ -50,7 +49,6 @@ class ResetPassword extends Component {
       this.state.passwordErrors.length === 0 &&
       this.state.passwordRepeatErrors.length === 0
     ) {
-      console.log(this.props.match.params.token, this.state.password);
       Accounts.resetPassword(this.props.match.params.token, this.state.password, (err, res) => {
         if(err) this.setState({passwordResetError: true, passwordResetErrorMessage: err.reason});
         else this.setState({passwordResetSuccess: true});

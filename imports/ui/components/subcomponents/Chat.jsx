@@ -25,7 +25,6 @@ class Chat extends Component {
   render() {
     const {messages} = this.props;
     const targetUser = this.users()[0] || {username: ''};
-    console.log(Meteor.user());
     return (
       <div className="card">
         <div className="card-header">

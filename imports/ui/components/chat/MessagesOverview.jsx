@@ -21,7 +21,6 @@ class MessagesOverview extends Component {
   
   messages() {
     const msgs = Messages.find({}).fetch();
-    console.log(msgs);
     return msgs;
   }
   
@@ -47,7 +46,6 @@ class MessagesOverview extends Component {
                 </thead>
                 <tbody>
                 {this.messages().map((message, index) => {
-                  console.log('msg', message, index);
                   let hasUnread = false;
                   for(let i = 0; i < message.messages.length; i++) {
                     if(!message.messages[i].read) {
@@ -83,7 +81,7 @@ class MessagesOverview extends Component {
           </div>
         </div>
         <div className="col-lg-3">
-          filters here
+          No filters available yet
         </div>
       </div>
       </div>

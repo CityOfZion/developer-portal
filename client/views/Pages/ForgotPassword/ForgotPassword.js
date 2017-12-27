@@ -19,7 +19,6 @@ class ForgotPassword extends Component {
   
   sendEmail() {
     Accounts.forgotPassword({email: this.state.email}, (err, res) => {
-      console.log(err, res);
       if(err) this.setState({loginError: true, loginErrorMessage: err.reason});
       else this.setState({emailSent: true});
     })

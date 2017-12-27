@@ -90,7 +90,6 @@ class Register extends Component {
     ) {
       // DO SUBMIT
       Accounts.createUser({username: this.state.username, email: this.state.email, password: this.state.password}, (err, res) => {
-        console.log(err, res);
         if(!err) {
           this.setState({userCreated: true});
           Meteor.call('sendVerificationLink', (err, res) => {
