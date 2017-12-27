@@ -18,7 +18,6 @@ class Login extends Component {
   
   login() {
     Meteor.loginWithPassword(this.state.user, this.state.password, (err, res) => {
-      console.log(err, res);
       if(err) this.setState({loginError: true, loginErrorMessage: err.reason});
       else this.props.history.push('/dashboard')
     })

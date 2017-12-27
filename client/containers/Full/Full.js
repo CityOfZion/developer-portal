@@ -8,24 +8,36 @@ import Aside from '../../components/Aside/';
 import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/'
-import Charts from '../../views/Charts/'
-import Widgets from '../../views/Widgets/'
-import Buttons from '../../views/Components/Buttons/'
-import Cards from '../../views/Components/Cards/'
-import Forms from '../../views/Components/Forms/'
-import Modals from '../../views/Components/Modals/'
-import SocialButtons from '../../views/Components/SocialButtons/'
-import Switches from '../../views/Components/Switches/'
-import Tables from '../../views/Components/Tables/'
-import Tabs from '../../views/Components/Tabs/'
-import FontAwesome from '../../views/Icons/FontAwesome/'
-import SimpleLineIcons from '../../views/Icons/SimpleLineIcons/'
-import MessagesOverview from "../../../imports/ui/components/MessagesOverview";
+import MessagesOverview from "../../../imports/ui/components/chat/MessagesOverview";
 import Header from "../../components/Header/Header";
-import MessageThread from "../../../imports/ui/components/MessageThread";
+import MessageThread from "../../../imports/ui/components/chat/MessageThread";
+import ReportAdd from "../../../imports/ui/components/reports/ReportAdd";
+import ReportsOverview from "../../../imports/ui/components/reports/ReportsOverview";
+import ReportView from "../../../imports/ui/components/reports/ReportView";
+import ReportEdit from "../../../imports/ui/components/reports/ReportEdit";
+import AdminReportsOverview from "../../../imports/ui/components/reports/admin/AdminReportsOverview";
+import AdminReportSummaryEdit from "../../../imports/ui/components/reports/admin/AdminReportSummaryEdit";
+import AdminReportVoting from "../../../imports/ui/components/reports/admin/AdminReportVoting";
+import AdminReportView from "../../../imports/ui/components/reports/admin/AdminReportView";
+
+import routePermissions from '/imports/route-permissions';
 
 class Full extends Component {
   render() {
+  
+    const paths = this.props.history.location.pathname.split('/');
+    if(Roles.userIsInRole(Meteor.userId(), ['admin'])) {
+      if(!routePermissions.admin.includes(paths[1])) return <Redirect to="/"/>
+    }
+  
+    if(Roles.userIsInRole(Meteor.userId(), ['council'])) {
+      if(!routePermissions.council.includes(paths[1])) return <Redirect to="/"/>
+    }
+    
+    if(Roles.userIsInRole(Meteor.userId(), ['developer'])) {
+      if(!routePermissions.developer.includes(paths[1])) return <Redirect to="/"/>
+    }
+    
     return (
       <div className="app">
         <Header {...this.props} />
@@ -38,18 +50,14 @@ class Full extends Component {
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
                 <Route exact path="/chats" name="Chats Overview" component={MessagesOverview}/>
                 <Route path="/chats/:id" name="Chats" component={MessageThread}/>
-                <Route path="/components/buttons" name="Buttons" component={Buttons}/>
-                <Route path="/components/cards" name="Cards" component={Cards}/>
-                <Route path="/components/forms" name="Forms" component={Forms}/>
-                <Route path="/components/modals" name="Modals" component={Modals}/>
-                <Route path="/components/social-buttons" name="Social Buttons" component={SocialButtons}/>
-                <Route path="/components/switches" name="Swithces" component={Switches}/>
-                <Route path="/components/tables" name="Tables" component={Tables}/>
-                <Route path="/components/tabs" name="Tabs" component={Tabs}/>
-                <Route path="/icons/font-awesome" name="Font Awesome" component={FontAwesome}/>
-                <Route path="/icons/simple-line-icons" name="Simple Line Icons" component={SimpleLineIcons}/>
-                <Route path="/widgets" name="Widgets" component={Widgets}/>
-                <Route path="/charts" name="Charts" component={Charts}/>
+                <Route exact path="/council/reports" name="Reports overview" component={AdminReportsOverview}/>
+                <Route exact path="/council/reports/view/:id" name="Report View" component={AdminReportView}/>
+                <Route exact path="/council/reports/edit/:id" name="Report Summary Edit" component={AdminReportSummaryEdit}/>
+                <Route exact path="/council/reports/vote/:id" name="Report Voting" component={AdminReportVoting}/>
+                <Route exact path="/reports" name="Reports overview" component={ReportsOverview}/>
+                <Route exact path="/reports/add" name="Add Report" component={ReportAdd}/>
+                <Route path="/reports/edit/:id" name="Modify Report" component={ReportEdit}/>
+                <Route path="/reports/:id" name="Reports Overview" component={ReportView}/>
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </div>

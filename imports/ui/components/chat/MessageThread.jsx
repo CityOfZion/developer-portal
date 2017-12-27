@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ReactMixin from 'react-mixin';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
-import Chat from "./subcomponents/Chat";
+import Chat from "../subcomponents/Chat";
 import Keypress from "react-keypress";
 
 class MessageThread extends Component {

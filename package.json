@@ -10,8 +10,11 @@
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
     "chart.js": "^2.7.1",
+    "countdown": "^2.6.0",
     "identicons-react": "^0.1.0",
     "meteor-node-stubs": "^0.3.2",
+    "moment": "^2.20.1",
+    "moment-countdown": "0.0.3",
     "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-addons-create-fragment": "^15.6.0",
@@ -32,6 +35,7 @@
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^1.1.2",
     "reactstrap": "^4.8.0",
+    "showdown": "^1.8.5",
     "simpl-schema": "^0.3.2"
   }
 }

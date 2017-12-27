@@ -1,5 +1,10 @@
+import { check } from 'meteor/check';
+
 Meteor.methods({
   sendChatMessage(chatId, message) {
+    check(chatId, String);
+    check(message, String);
+    
     return Messages.update({_id: chatId}, {
       $push: {
         messages: {
@@ -12,6 +17,8 @@ Meteor.methods({
     });
   },
   createChat(targetUser) {
+    check(targetUser, String);
+    
     return Messages.insert({
       fromUserId: Meteor.userId(),
       toUserId: targetUser,

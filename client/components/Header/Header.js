@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Dropdown, DropdownMenu, DropdownItem } from 'reactstrap';
 import ReactMixin from 'react-mixin';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import Initicon from 'react-initicon';
+import moment from 'moment';
 
 class Header extends Component {
 
@@ -13,7 +15,10 @@ class Header extends Component {
     this.toggle = this.toggle.bind(this);
     this.state = {
       subscription: {
-        unreadMessages: Meteor.subscribe('unreadMessages')
+        initialized: false,
+        unreadMessages: Meteor.subscribe('unreadMessages'),
+        unreadAlerts: Meteor.subscribe('unreadAlerts'),
+        reportSummary: Meteor.subscribe('currentSummary')
       },
       dropdownOpen: false
     };
@@ -21,12 +26,30 @@ class Header extends Component {
   
   componentWillUnmount() {
     this.state.subscription.unreadMessages.stop();
+    this.state.subscription.unreadAlerts.stop();
+    this.state.subscription.reportSummary.stop();
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+    if (this.reportSummary() && !this.state.initialized) {
+      this.setState({
+        report: this.reportSummary(),
+        initialized: true
+      });
+    }
+  }
+  
+  reportSummary() {
+    return ReportSummaries.findOne({});
   }
   
   unreadMessages() {
-    const msgs = Messages.find({messages: {$elemMatch: {read: false}}}).fetch();
-    console.log(msgs);
-    return msgs;  }
+    return Messages.find({messages: {$elemMatch: {read: false}}}).fetch();
+  }
+  
+  unreadAlertsCount() {
+    return Alerts.find({}).fetch().length;
+  }
   
   toggle() {
     this.setState({
@@ -54,29 +77,62 @@ class Header extends Component {
     document.body.classList.toggle('aside-menu-hidden');
   }
 
+  adminMenu() {
+    return <ul className="nav navbar-nav d-md-down-none">
+      <li className="nav-item">
+        <button className="nav-link navbar-toggler sidebar-toggler" type="button" onClick={this.sidebarToggle}>&#9776;</button>
+      </li>
+      <li className="nav-item px-3">
+        <a className="nav-link" href="/">Dashboard</a>
+      </li>
+      <li className="nav-item px-3">
+        <a className="nav-link" href="#">Users</a>
+      </li>
+      <li className="nav-item px-3">
+        <a className="nav-link" href="#">Settings</a>
+      </li>
+    </ul>
+  }
+  
+  developerMenu() {
+    return <ul className="nav navbar-nav d-md-down-none">
+      <li className="nav-item">
+        <button className="nav-link navbar-toggler sidebar-toggler" type="button" onClick={this.sidebarToggle}>&#9776;</button>
+      </li>
+      <li className="nav-item px-3">
+        <a className="nav-link" href="/">Dashboard</a>
+      </li>
+    </ul>
+  }
+  
+  countdownTimer() {
+    if(!this.state.report) return '';
+    let timeRemaining = 0;
+    let string = '';
+    if(!Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
+      timeRemaining = moment(moment(this.state.report.reportsEndDate) - moment());
+      string = <Link className="btn btn-danger mr-2" to="/reports/add">Report submission ends in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins {timeRemaining.seconds()} sec</Link>;
+    } else {
+      if(!this.state.report.votingCloseDate) {
+        string = <Link className="btn btn-danger mr-2" to="/council/reports">Voting is open</Link>;
+      } else {
+        timeRemaining = moment(moment(this.state.report.votingCloseDate) - moment());
+        string = <Link className="btn btn-danger mr-2" to="/admin/reports">Voting ends in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins {timeRemaining.seconds()} sec</Link>;
+      }
+    }
+    return string;
+  }
+  
   render() {
-    console.log(this.props, this.state);
     return (
       <header className="app-header navbar">
         <button className="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" onClick={this.mobileSidebarToggle}>&#9776;</button>
         <a className="navbar-brand" href="#"></a>
-        <ul className="nav navbar-nav d-md-down-none">
-          <li className="nav-item">
-            <button className="nav-link navbar-toggler sidebar-toggler" type="button" onClick={this.sidebarToggle}>&#9776;</button>
-          </li>
-          <li className="nav-item px-3">
-            <a className="nav-link" href="#">Dashboard</a>
-          </li>
-          <li className="nav-item px-3">
-            <a className="nav-link" href="#">Users</a>
-          </li>
-          <li className="nav-item px-3">
-            <a className="nav-link" href="#">Settings</a>
-          </li>
-        </ul>
+        {Roles.userIsInRole(Meteor.userId(), ['council', 'admin']) ? this.adminMenu() : this.developerMenu()}
         <ul className="nav navbar-nav ml-auto">
+          <li className="nav-item">{this.countdownTimer()}</li>
           <li className="nav-item d-md-down-none">
-            <a className="nav-link" href="#"><i className="icon-bell"></i><span className="badge badge-pill badge-danger">5</span></a>
+            <a className="nav-link" href="#"><i className="icon-bell"></i><span className="badge badge-pill badge-danger">{this.unreadAlertsCount()}</span></a>
           </li>
           <li className="nav-item d-md-down-none">
             <a className="nav-link" href="#"><i className="icon-list"></i></a>
