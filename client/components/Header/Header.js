@@ -109,21 +109,42 @@ class Header extends Component {
     if(!this.state.report) return '';
     let timeRemaining = 0;
     let string = '';
+    const now = moment();
+    console.log(this.state.report.reportsEndDate);
     if(!Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
-      timeRemaining = moment(moment(this.state.report.reportsEndDate) - moment());
-      string = <Link className="btn btn-danger mr-2" to="/reports/add">Report submission ends in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins {timeRemaining.seconds()} sec</Link>;
+      const endDate = moment(this.state.report.reportsEndDate);
+      const diff = endDate - now;
+      const remaining = moment.duration(diff, 'milliseconds');
+      string = <Link className="btn btn-danger mr-2" to="/reports/add">Report submission ends in: {remaining.days()} days {remaining.hours()} hours {remaining.minutes()} mins {remaining.seconds()} sec</Link>;
     } else {
       if(!this.state.report.votingCloseDate) {
         string = <Link className="btn btn-danger mr-2" to="/council/reports">Voting is open</Link>;
       } else {
-        timeRemaining = moment(moment(this.state.report.votingCloseDate) - moment());
+        const endDate = moment(this.state.report.votingCloseDate);
+        const diff = endDate - now;
+        const timeRemaining = moment.duration(diff, 'milliseconds');
         string = <Link className="btn btn-danger mr-2" to="/admin/reports">Voting ends in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins {timeRemaining.seconds()} sec</Link>;
       }
     }
     return string;
   }
   
+  userIcon() {
+    if(Meteor.user().profile && Meteor.user().profile.slack) {
+      return <img src={Meteor.user().profile.slack.user.image_32} />
+    } else {
+      return <Initicon
+        size={40}
+        text={Meteor.user().username}
+        seed={20}
+        single={false}
+      />
+    }
+  }
+  
   render() {
+    if(!Meteor.user()) return <div></div>;
+    
     return (
       <header className="app-header navbar">
         <button className="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" onClick={this.mobileSidebarToggle}>&#9776;</button>
@@ -143,12 +164,7 @@ class Header extends Component {
           <li className="nav-item">
             <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
               <button onClick={this.toggle} className="nav-link dropdown-toggle" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded={this.state.dropdownOpen}>
-                {Meteor.user() ? <Initicon
-                  size={40}
-                  text={Meteor.user().username}
-                  seed={20}
-                  single={false}
-                /> : ''}
+                {this.userIcon()}
               </button>
 
               <DropdownMenu className="dropdown-menu-right">
@@ -161,7 +177,7 @@ class Header extends Component {
 
                 <DropdownItem header className="text-center"><strong>Settings</strong></DropdownItem>
 
-                <DropdownItem><i className="fa fa-user"></i> Profile</DropdownItem>
+                <DropdownItem onClick={e => this.props.history.push('/profile')}><i className="fa fa-user"></i>Profile</DropdownItem>
                 <DropdownItem><i className="fa fa-wrench"></i> Settings</DropdownItem>
                 <DropdownItem><i className="fa fa-usd"></i> Payments<span className="badge badge-default">42</span></DropdownItem>
                 <DropdownItem><i className="fa fa-file"></i> Projects<span className="badge badge-primary">42</span></DropdownItem>

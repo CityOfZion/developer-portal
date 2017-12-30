@@ -1,0 +1,8 @@
+{
+  "private": {
+    "slack": {
+      "clientId": "clientId",
+      "secret": "secret"
+    }
+  }
+}

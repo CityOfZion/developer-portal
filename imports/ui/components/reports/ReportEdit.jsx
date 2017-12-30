@@ -26,7 +26,7 @@ class ReportEdit extends Component {
   }
   
   componentDidUpdate(prevProps, prevState) {
-    if(this.report().length > 0 && this.report()[0].content !== this.state.content && !this.state.initialized) {
+    if (this.report().length > 0 && this.report()[0].content !== this.state.content && !this.state.initialized) {
       this.setState({content: this.report()[0].content, initialized: true});
     }
   }
@@ -97,15 +97,24 @@ class ReportEdit extends Component {
                 <i className="fa fa-eye"> </i> Example output
               </div>
               <div className="card-block">
-                <div className="form-group" dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(this.state.content))}}/>
+                <div className="form-group"
+                     dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(this.state.content))}}/>
               </div>
             </div>
           </div>
         </div>
-        <ErrorModal opened={this.state.editReportError} type="warning" message={this.state.editReportErrorMessage}
-                    title="Error" callback={() => this.setState({editReportError: false, editReportErrorMessage: ''})}/>
-        <ErrorModal opened={this.state.editReportSuccess} type="success" message="Your report was edited"
-                    title="Success" callback={() => this.setState({editReportSuccess: false})}/>
+        <ErrorModal
+          opened={this.state.editReportError} type="warning"
+          message={this.state.editReportErrorMessage}
+          disableCancel={true}
+          title="Error"
+          callback={() => this.setState({editReportError: false, editReportErrorMessage: ''})}/>
+        <ErrorModal
+          opened={this.state.editReportSuccess}
+          type="success"
+          message="Your report was edited"
+          disableCancel={true}
+          title="Success" callback={() => this.setState({editReportSuccess: false})}/>
       </div>
     )
   }

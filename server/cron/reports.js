@@ -39,13 +39,22 @@ SyncedCron.add({
       });
     });
     
+    ReportSummaries.update({
+      reportsStartDate: weekAgoStart.toDate(),
+      reportsEndDate: weekAgoEnd.toDate()
+    }, {
+      $set: {
+        votingOpen: true
+      }
+    });
+    
     // Insert new week
     ReportSummaries.insert({
       reportsStartDate: thisWeekStart.toDate(),
       reportsEndDate: thisWeekEnd.toDate(),
       totalReward: 0,
       totalReports: reports.length,
-      votingOpen: true,
+      votingOpen: false,
       votingCompleted: false,
       distributionCompleted: false
     });

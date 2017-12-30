@@ -105,13 +105,15 @@ class AdminReportSummaryEdit extends Component {
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label">Distribution</label>
                   <div className="col-md-9">
-                    <p className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
+                    <p
+                      className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
                   </div>
                 </div>
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label">Reward amount</label>
                   <div className="col-md-9">
-                    <p className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
+                    <p
+                      className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
                   </div>
                 </div>
               </div>
@@ -126,20 +128,29 @@ class AdminReportSummaryEdit extends Component {
                 {reports.reports.map((rep, index) =>
                   <FoldingCard
                     key={index}
-                  header={`${rep.user.username} reported on ` + moment(rep.reportedOn).format('YYYY-MM-DD HH:mm')}
-                  content={replaceURLWithHTMLLinks(converter.makeHtml(rep.content))}
+                    header={`${rep.user.username} reported on ` + moment(rep.reportedOn).format('YYYY-MM-DD HH:mm')}
+                    content={replaceURLWithHTMLLinks(converter.makeHtml(rep.content))}
                   />
                 )}
-                
+              
               </div>
-              </div>
+            </div>
           </div>
-          </div>
-        <ErrorModal opened={this.state.editReportSummaryError} type="warning" message={this.state.editReportSummaryErrorMessage}
-                    title="Error"
-                    callback={() => this.setState({editReportSummaryError: false, editReportSummaryErrorMessage: ''})}/>
-        <ErrorModal opened={this.state.editReportSummarySuccess} type="success" message="Your report was edited"
-                    title="Success" callback={() => this.setState({editReportSummarySuccess: false})}/>
+        </div>
+        <ErrorModal
+          opened={this.state.editReportSummaryError}
+          type="warning"
+          message={this.state.editReportSummaryErrorMessage}
+          disableCancel={true}
+          title="Error"
+          callback={() => this.setState({editReportSummaryError: false, editReportSummaryErrorMessage: ''})}/>
+        <ErrorModal
+          opened={this.state.editReportSummarySuccess}
+          type="success"
+          message="Your report was edited"
+          disableCancel={true}
+          title="Success"
+          callback={() => this.setState({editReportSummarySuccess: false})}/>
       </div>
     )
   }

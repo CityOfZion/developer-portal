@@ -77,15 +77,27 @@ class ReportAdd extends Component {
                 <i className="fa fa-align-justify"> </i> Example output
               </div>
               <div className="card-block">
-                <div className="form-group" dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(this.state.content))}}/>
+                <div className="form-group"
+                     dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(this.state.content))}}/>
               </div>
             </div>
           </div>
         </div>
-        <ErrorModal opened={this.state.addReportError} type="warning" message={this.state.addReportErrorMessage}
-                    title="Error" callback={() => this.setState({addReportError: false, addReportErrorMessage: ''})}/>
-        <ErrorModal opened={this.state.addReportSuccess} type="success" message="Your report was submitted"
-                    title="Success" callback={() => this.setState({addReportSuccess: false})}/>
+        <ErrorModal
+          opened={this.state.addReportError}
+          disableCancel={true}
+          confirmMessage="Close"
+          type="warning"
+          message={this.state.addReportErrorMessage}
+          title="Error"
+          callback={() => this.setState({addReportError: false, addReportErrorMessage: ''})}/>
+        <ErrorModal
+          opened={this.state.addReportSuccess}
+          type="success"
+          message="Your report was submitted"
+          disableCancel={true}
+          title="Success"
+          callback={() => this.setState({addReportSuccess: false})}/>
       </div>
     )
   }

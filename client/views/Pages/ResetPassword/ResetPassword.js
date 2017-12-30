@@ -97,8 +97,8 @@ class ResetPassword extends Component {
             </div>
           </div>
         </div>
-        <ErrorModal opened={this.state.passwordResetError} type="warning" message={this.state.passwordResetErrorMessage} title="Error" callback={() => this.setState({passwordResetError: false, passwordResetErrorMessage: ''}) } />
-        <ErrorModal opened={this.state.passwordResetSuccess} type="success" message="Your password has been reset, when you close this message you will be redirected" title="Success" callback={() => this.props.history.push('/login') } />
+        <ErrorModal opened={this.state.passwordResetError} type="warning" message={this.state.passwordResetErrorMessage} title="Error" disableCancel={true} confirmMessage="Close" callback={() => this.setState({passwordResetError: false, passwordResetErrorMessage: ''}) } />
+        <ErrorModal opened={this.state.passwordResetSuccess} type="success" message="Your password has been reset, when you close this message you will be redirected" title="Success" disableCancel={true} callback={() => this.props.history.push('/login') } />
       </div>
     );
   }

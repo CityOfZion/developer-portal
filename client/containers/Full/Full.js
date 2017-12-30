@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { withTracker } from 'meteor/react-meteor-data';
 import PropTypes from 'prop-types';
 import { Link, Switch, Route, Redirect } from 'react-router-dom'
@@ -21,8 +22,20 @@ import AdminReportVoting from "../../../imports/ui/components/reports/admin/Admi
 import AdminReportView from "../../../imports/ui/components/reports/admin/AdminReportView";
 
 import routePermissions from '/imports/route-permissions';
+import ProfileEdit from "../../../imports/ui/components/profile/ProfileEdit";
+import ProfileOverview from "../../../imports/ui/components/profile/ProfileOverview";
+import ProfileView from "../../../imports/ui/components/profile/ProfileView";
+import AddService from "../../../imports/ui/components/third-party/AddService";
 
 class Full extends Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      initialized: false
+    }
+  }
+  
   render() {
   
     const paths = this.props.history.location.pathname.split('/');
@@ -48,16 +61,24 @@ class Full extends Component {
             <div className="container-fluid">
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
+                
                 <Route exact path="/chats" name="Chats Overview" component={MessagesOverview}/>
                 <Route path="/chats/:id" name="Chats" component={MessageThread}/>
+                
                 <Route exact path="/council/reports" name="Reports overview" component={AdminReportsOverview}/>
                 <Route exact path="/council/reports/view/:id" name="Report View" component={AdminReportView}/>
                 <Route exact path="/council/reports/edit/:id" name="Report Summary Edit" component={AdminReportSummaryEdit}/>
                 <Route exact path="/council/reports/vote/:id" name="Report Voting" component={AdminReportVoting}/>
+                
                 <Route exact path="/reports" name="Reports overview" component={ReportsOverview}/>
                 <Route exact path="/reports/add" name="Add Report" component={ReportAdd}/>
                 <Route path="/reports/edit/:id" name="Modify Report" component={ReportEdit}/>
                 <Route path="/reports/:id" name="Reports Overview" component={ReportView}/>
+  
+                <Route exact path="/profile/edit" name="Edit Profile" component={ProfileEdit}/>
+                <Route exact path="/profile" name="View Profile" component={ProfileView}/>
+                <Route exact path="/third-party/auth/:service" name="Third Party Add" component={AddService}/>
+                
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </div>
