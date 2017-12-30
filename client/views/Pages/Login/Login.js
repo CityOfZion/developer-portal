@@ -70,7 +70,13 @@ class Login extends Component {
             </div>
           </div>
         </div>
-        <ErrorModal opened={this.state.loginError} type="warning" message={this.state.loginErrorMessage} title="Error" callback={() => this.setState({loginError: false, loginErrorMessage: ''}) } />
+        <ErrorModal
+          opened={this.state.loginError}
+          type="warning"
+          disableCancel={true}
+          message={this.state.loginErrorMessage}
+          title="Error"
+          callback={() => this.setState({loginError: false, loginErrorMessage: ''}) } />
       </div>
     );
   }

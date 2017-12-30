@@ -2,17 +2,23 @@ const routePermissions = {
   developer: [
     'chats',
     'reports',
-    'dashboard'
+    'dashboard',
+    'profile',
+    'third-party'
   ],
   council: [
     'chats',
     'council',
-    'dashboard'
+    'dashboard',
+    'profile',
+    'third-party'
   ],
   admin: [
     'chats',
     'admin',
-    'dashboard'
+    'dashboard',
+    'profile',
+    'third-party'
   ]
 };
 

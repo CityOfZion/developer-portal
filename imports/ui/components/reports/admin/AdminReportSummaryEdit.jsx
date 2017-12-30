@@ -3,6 +3,7 @@ import ReactMixin from 'react-mixin';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
 import moment from 'moment';
+
 class AdminReportSummaryEdit extends Component {
   
   constructor(props) {
@@ -62,7 +63,7 @@ class AdminReportSummaryEdit extends Component {
     const {history} = this.props;
     const report = this.reportSummaries()[0] || {};
     
-   
+    
     return (
       <div className="animated fadeIn">
         <div className="row">
@@ -103,7 +104,8 @@ class AdminReportSummaryEdit extends Component {
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label" htmlFor="text-input">Reward amount</label>
                   <div className="col-md-9">
-                    <input type="text" id="amount" name="amount" className="form-control" onChange={e => this.setState({totalReward: e.currentTarget.value})}
+                    <input type="text" id="amount" name="amount" className="form-control"
+                           onChange={e => this.setState({totalReward: e.currentTarget.value})}
                            value={this.state.totalReward} placeholder={this.state.totalReward || 'Fill in a reward'}/>
                   </div>
                 </div>
@@ -119,11 +121,18 @@ class AdminReportSummaryEdit extends Component {
             </div>
           </div>
         </div>
-        <ErrorModal opened={this.state.editReportSummaryError} type="warning" message={this.state.editReportSummaryErrorMessage}
-                    title="Error"
-                    callback={() => this.setState({editReportSummaryError: false, editReportSummaryErrorMessage: ''})}/>
-        <ErrorModal opened={this.state.editReportSummarySuccess} type="success" message="Your report was edited"
-                    title="Success" callback={() => this.setState({editReportSummarySuccess: false})}/>
+        <ErrorModal
+          opened={this.state.editReportSummaryError}
+          type="warning"
+          message={this.state.editReportSummaryErrorMessage}
+          title="Error"
+          callback={() => this.setState({editReportSummaryError: false, editReportSummaryErrorMessage: ''})}/>
+        <ErrorModal
+          opened={this.state.editReportSummarySuccess}
+          type="success"
+          message="Your report was edited"
+          title="Success"
+          callback={() => this.setState({editReportSummarySuccess: false})}/>
       </div>
     )
   }

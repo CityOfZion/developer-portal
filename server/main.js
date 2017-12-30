@@ -4,14 +4,15 @@ Meteor.startup(() => {
   Accounts.urls.resetPassword = (token) => Meteor.absoluteUrl(`reset-password/${token}`);
   Accounts.urls.verifyEmail = (token) => Meteor.absoluteUrl(`verify-email/${token}`);
   Accounts.urls.enrollAccount = (token) => Meteor.absoluteUrl(`enroll-account/${token}`);
+  Accounts.onCreateUser(function(options, user) {
+    console.log(options, user);
+    user.roles = ['developer'];
+    return user;
+  });
   Accounts.validateLoginAttempt(function(options) {
     // If the login has failed, just return false.
     if (!options.allowed) {
       return false;
-    }
-    
-    if(!options.user.roles) {
-      Roles.addUsersToRoles(options.user._id, 'developer');
     }
     
     if (options.user.emails[0].verified === true) {
