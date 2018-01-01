@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { Email } from 'meteor/email';
 
 SyncedCron.add({
   name: 'Check if week is over',
@@ -29,6 +30,25 @@ SyncedCron.add({
       });
     });
     
+    const weekAgoSummary = ReportSummaries.findOne({
+      reportsStartDate: weekAgoStart.toDate(),
+      reportsEndDate: weekAgoEnd.toDate()
+    });
+  
+    let weekAgoSummaryId = false;
+    
+    if(!weekAgoSummary) {
+      weekAgoSummaryId = ReportSummaries.insert({
+        reportsStartDate: weekAgoStart.toDate(),
+        reportsEndDate: weekAgoEnd.toDate(),
+        totalReward: 0,
+        totalReports: reports.length,
+        votingOpen: false,
+        votingCompleted: false,
+        distributionCompleted: false
+      });
+    }
+    
     Meteor.users.find({roles: 'council'}).fetch().forEach(user => {
       Alerts.insert({
         title: `Week ${week} review`,
@@ -37,11 +57,19 @@ SyncedCron.add({
         alertedOn: new Date(),
         read: false
       });
+      
+      Email.send({
+        to: user.emails[0].address,
+        from: 'notifications@cityofzion.io',
+        subject: `Voting for week ${week} is now open`,
+        html: `
+        You can now vote on week ${week} here: ${Meteor.absoluteUrl()}council/reports/vote/${weekAgoSummaryId ? weekAgoSummaryId : weekAgoSummary._id}
+        `
+      });
     });
     
     ReportSummaries.update({
-      reportsStartDate: weekAgoStart.toDate(),
-      reportsEndDate: weekAgoEnd.toDate()
+      _id: weekAgoSummaryId ? weekAgoSummaryId : weekAgoSummary._id
     }, {
       $set: {
         votingOpen: true
