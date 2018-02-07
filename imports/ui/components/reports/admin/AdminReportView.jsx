@@ -1,141 +1,182 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
 import showdown from 'showdown';
 import moment from 'moment';
 import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
 import FoldingCard from "../../widgets/FoldingCard";
+import ContentTable from "../../widgets/ContentTable";
 
-class AdminReportSummaryEdit extends Component {
+class AdminReportView extends Component {
   
   constructor(props) {
     super(props);
     this.state = {
       initialized: false,
-      subscription: {
-        reportSummaries: Meteor.subscribe('reportSummaryById', this.props.match.params.id),
-        reports: Meteor.subscribe('admin.reportsOverviewBySummaryId', this.props.match.params.id)
-      },
       totalReward: 0,
+      totalVotes: 0,
       summaryId: ''
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.reportSummaries.stop();
-    this.state.subscription.reports.stop();
+  getVoteAverage(votes) {
+    
+    return this.getVoteTotals(votes) / votes.length;
   }
   
-  componentDidUpdate(prevProps, prevState) {
-    if (this.reportSummaries().length > 0 && this.reportSummaries()[0].totalReward !== this.state.totalReward && !this.state.initialized) {
-      this.setState({
-        totalReward: this.reportSummaries()[0].totalReward,
-        summaryId: this.reportSummaries()[0]._id,
-        initialized: true
-      });
-    }
+  getVoteTotals(votes) {
+    return votes.reduce((a, b) => {
+      return a + b.vote;
+    }, 0)
   }
   
-  resetForm() {
-    this.setState({totalReward: 0});
+  componentWillReceiveProps(props) {
+    console.log('componentWillReceiveProps', props);
+    this.countVotes(props.joinedReportSummaries);
   }
   
-  reportSummaries() {
-    return ReportSummaries.find({}).fetch();
+  countVotes(summaries) {
+    const joinedReportSummary = summaries.length > 0 ? summaries[0] : false;
+  
+    console.log('countVotes', summaries);
+    
+    if(!joinedReportSummary || this.state.initialized) return false;
+    
+    let totalAmountOfVotes = 0;
+    
+    joinedReportSummary.reports.forEach(report => {
+      totalAmountOfVotes += report.votes.reduce((a, b) => {
+        return a + b.vote;
+      }, 0);
+    });
+    
+    console.log('countVotes', {totalVotes: totalAmountOfVotes, initialized: true});
+    
+    this.setState({totalVotes: totalAmountOfVotes, initialized: true});
   }
   
-  reports() {
-    const reports = AdminReports.find({}).fetch();
-    return reports;
+  overview(reportSummary) {
+    return <div className="col-lg-6">
+      <div className="card">
+        <div className="card-header">
+          <i className="fa fa-eye"> </i> Viewing report summary for week {moment(reportSummary.reportsEndDate).isoWeek()}
+        </div>
+        <div className="card-block">
+          <div className="form-group row">
+            <label className="col-md-3 form-control-label">Report End Date</label>
+            <div className="col-md-9">
+              <p className="form-control-static">{moment(reportSummary.reportsEndDate).format('YYYY-MM-DD HH:mm')}</p>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label className="col-md-3 form-control-label">Voting End Date</label>
+            <div className="col-md-9">
+              <p className="form-control-static">{reportSummary.votingCloseDate ? moment(reportSummary.votingCloseDate).format('YYYY-MM-DD HH:mm') : 'Not decided yet'}</p>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label className="col-md-3 form-control-label">Total rewards</label>
+            <div className="col-md-9">
+              <p className="form-control-static">{reportSummary.totalReward}</p>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label className="col-md-3 form-control-label">Amount of reports</label>
+            <div className="col-md-9">
+              <p className="form-control-static">{reportSummary.totalReports}</p>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label className="col-md-3 form-control-label">Voting</label>
+            <div className="col-md-9">
+              <p className="form-control-static">
+                {reportSummary.votingOpen ? 'Open for voting' : 'Voting is closed'}<br/>
+                {reportSummary.votingCompleted ? 'Voting is completed' : 'Voting is incomplete'}
+              </p>
+            </div>
+          </div>
+          <div className="form-group row">
+            <label className="col-md-3 form-control-label">Distribution</label>
+            <div className="col-md-9">
+              <p
+                className="form-control-static">{reportSummary.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   }
   
-  submitForm() {
-    if (this.state.totalReward >= 0) {
-      Meteor.call('setReportSummaryTotalReward', this.props.match.params.id, parseInt(this.state.totalReward), (err, res) => {
-        if (err) {
-          this.setState({editReportSummaryError: true, editReportSummaryErrorMessage: err.reason});
-        } else {
-          if (res.error) {
-            this.setState({editReportSummaryError: true, editReportSummaryErrorMessage: res.error});
-          } else {
-            this.setState({editReportSummarySuccess: true});
-          }
-        }
-      })
-    }
+  reportsView(joinedReportSummary) {
+    const converter = new showdown.Converter();
+  
+    return <div className="col-lg-6">
+      <div className="card">
+        <div className="card-header">
+          <i className="fa fa-files-o"> </i> Reports
+        </div>
+        <div className="card-block">
+          {joinedReportSummary.reports.map((report, index) =>
+            <FoldingCard
+              key={index}
+              header={`${report.user.username} reported on ` + moment(report.reportedOn).format('YYYY-MM-DD HH:mm')}
+              content={replaceURLWithHTMLLinks(converter.makeHtml(report.content))}
+            />
+          )}
+    
+        </div>
+      </div>
+    </div>
+  }
+  
+  distributionView(joinedReportSummary, reportSummary) {
+  
+    const headers = ['Username', 'Vote avg', 'Vote %', 'Reward', 'address'];
+    const items = joinedReportSummary.reports.map((report, index) => {
+    
+      const voteAverage = this.getVoteAverage(report.votes);
+      const votePercentage = this.getVoteTotals(report.votes) / this.state.totalVotes * 100;
+      const neoRewarded = Math.ceil(reportSummary.totalReward * votePercentage / 100);
+      return <tr key={index}>
+        <td>{report.user.username}</td>
+        <td>{voteAverage.toFixed(2)}</td>
+        <td>{votePercentage.toFixed(2)}%</td>
+        <td>{neoRewarded}</td>
+        <td>{report.user.mainWalletAddress ? report.user.mainWalletAddress : 'No address specified'}</td>
+      </tr>
+    });
+    
+    return <div className="col-lg-12">
+      <div className="card">
+        <div className="card-header">
+          <i className="fa fa-money"></i> Distribution
+        </div>
+      
+        <div className="card-block">
+          <ContentTable
+            headers={headers}
+            items={items}
+            pages={1}
+            currentPage={1}
+          />
+        </div>
+      </div>
+    </div>
   }
   
   render() {
-    const {history} = this.props;
-    const report = this.reportSummaries()[0] || {};
-    const reports = this.reports()[0] || {reports: []};
-    const converter = new showdown.Converter();
+    const {history, reports, reportSummary, joinedReportSummaries} = this.props;
+  
+    const joinedReportSummary = joinedReportSummaries.length > 0 ? joinedReportSummaries[0] : false;
+    
+    console.log('joinedReportSummary', joinedReportSummary);
     
     return (
       <div className="animated fadeIn">
         <div className="row">
-          <div className="col-lg-6">
-            <div className="card">
-              <div className="card-header">
-                <i className="fa fa-eye"> </i> Viewing report summary for week {moment(report.reportsEndDate).isoWeek()}
-              </div>
-              <div className="card-block">
-                <div className="form-group row">
-                  <label className="col-md-3 form-control-label">Report End Date</label>
-                  <div className="col-md-9">
-                    <p className="form-control-static">{moment(report.reportsEndDate).format('YYYY-MM-DD HH:mm')}</p>
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label className="col-md-3 form-control-label">Amount of reports</label>
-                  <div className="col-md-9">
-                    <p className="form-control-static">{report.totalReports}</p>
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label className="col-md-3 form-control-label">Voting</label>
-                  <div className="col-md-9">
-                    <p className="form-control-static">
-                      {report.votingOpen ? 'Open for voting' : 'Voting is closed'}<br/>
-                      {report.votingCompleted ? 'Voting is completed' : 'Voting is incomplete'}
-                    </p>
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label className="col-md-3 form-control-label">Distribution</label>
-                  <div className="col-md-9">
-                    <p
-                      className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
-                  </div>
-                </div>
-                <div className="form-group row">
-                  <label className="col-md-3 form-control-label">Reward amount</label>
-                  <div className="col-md-9">
-                    <p
-                      className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-6">
-            <div className="card">
-              <div className="card-header">
-                <i className="fa fa-files-o"> </i> Reports
-              </div>
-              <div className="card-block">
-                {reports.reports.map((rep, index) =>
-                  <FoldingCard
-                    key={index}
-                    header={`${rep.user.username} reported on ` + moment(rep.reportedOn).format('YYYY-MM-DD HH:mm')}
-                    content={replaceURLWithHTMLLinks(converter.makeHtml(rep.content))}
-                  />
-                )}
-              
-              </div>
-            </div>
-          </div>
+          {reportSummary ? this.overview(reportSummary) : ''}
+          {joinedReportSummary ? this.reportsView(joinedReportSummary) : ''}
+          {joinedReportSummary && reportSummary ? this.distributionView(joinedReportSummary, reportSummary) : ''}
         </div>
         <ErrorModal
           opened={this.state.editReportSummaryError}
@@ -156,7 +197,4 @@ class AdminReportSummaryEdit extends Component {
   }
 }
 
-ReactMixin(AdminReportSummaryEdit.prototype, TrackerReactMixin);
-
-
-export default AdminReportSummaryEdit;
+export default AdminReportView;

@@ -5,6 +5,7 @@
     "start": "meteor run"
   },
   "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.39",
     "@coreui/react": "^1.0.6",
     "@slack/client": "^3.14.2",
     "babel-runtime": "^6.26.0",
@@ -34,6 +35,7 @@
     "react-recaptcha": "^2.3.5",
     "react-router-dom": "^4.2.2",
     "react-transition-group": "^1.1.2",
+    "react-visibility-sensor": "^3.11.0",
     "reactstrap": "^4.8.0",
     "showdown": "^1.8.5",
     "simpl-schema": "^0.3.2"

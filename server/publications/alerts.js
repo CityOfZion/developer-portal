@@ -1,3 +1,7 @@
 Meteor.publish('unreadAlerts', function() {
-  return Alerts.find({userId: Meteor.userId()});
-})
+  return UserAlerts.find({userId: Meteor.userId(), read: false});
+});
+
+Meteor.publish('alerts', function() {
+  return UserAlerts.find({userId: Meteor.userId()});
+});

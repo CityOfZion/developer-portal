@@ -9,48 +9,11 @@ class AdminReportsOverview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subscription: {
-        reports: Meteor.subscribe('reports'),
-        reportSummaries: Meteor.subscribe('reportSummaries')
-      },
       maxItemsPerPage: 10,
       totalItems: 0,
       currentPage: 1,
       pages: 1
     }
-  }
-  
-  componentWillUnmount() {
-    this.state.subscription.reports.stop();
-  }
-  
-  reports() {
-    let reports = Reports.find({}, {sort: {year: -1, _id: -1}, limit: this.state.maxItemsPerPage, skip: (this.state.currentPage - 1) * this.state.maxItemsPerPage}).fetch();
-    const reportSummaries = ReportSummaries.find({}, {sort: {reportsEndDate: -1}}).fetch();
-    
-    const repSum = {};
-    reportSummaries.forEach(sum => {
-      repSum[moment(sum.reportsEndDate).format('YYYY-W')] = sum;
-    });
-    
-    reports.map(report => {
-      report.votingActive = !repSum[report._id] || repSum[report._id].voteCompleted;
-      report.summary = !repSum[report._id] ? false : repSum[report._id];
-      return report;
-    });
-    
-    return reports;
-  }
-  
-  componentDidUpdate() {
-    this.reportCount();
-  }
-  
-  reportCount() {
-    const reportsCount = Reports.find({}).count();
-    const pages = Math.ceil(reportsCount / this.state.maxItemsPerPage);
-    if(pages !== this.state.pages) this.setState({pages: pages});
-    return reportsCount;
   }
   
   changePageCallback = (page) => {
@@ -71,10 +34,10 @@ class AdminReportsOverview extends Component {
   };
   
   getWeeklySummaryStatus(summary) {
-    if (!summary) return 'Awaiting End of Week';
     if (summary.votingOpen) return 'Awaiting Votes';
     if (summary.votingCompleted && summary.distributionCompleted) return 'Completed';
     if (summary.votingCompleted) return 'Awaiting Distribution';
+    return 'Awaiting End of Week';
   }
   
   editButtonEnabled(summary) {
@@ -91,24 +54,36 @@ class AdminReportsOverview extends Component {
     if (summary.votingCompleted) return false;
   }
   
+  voteButton(summary) {
+    const now = moment();
+    const endDate = moment(summary.votingCloseDate);
+    const diff = endDate - now;
+    const timeRemaining = moment.duration(diff, 'milliseconds');
+    
+    const voteLabel = summary.votingCloseDate ? `Vote (ends in ${timeRemaining.days()}D ${timeRemaining.hours()}H ${timeRemaining.minutes()}M ${timeRemaining.seconds()}S)` : 'Vote';
+    
+    return this.voteButtonEnabled(summary) ?
+      <button className="btn btn-sm btn-warning" onClick={e => this.props.history.push('/council/reports/vote/' + summary._id)}><i className="fa fa-hand-paper-o"> </i> {voteLabel}</button> :
+      '';
+  }
+  
   render() {
     const {history} = this.props;
     const currentWeek = moment().isoWeek();
     
     const headers = ['Week', 'Year', 'Reports', 'Status', 'Rewards', 'Action'];
-    const items = this.reports().map((report, index) => {
-      const [year, week] = report._id.split('-');
+    const items = this.props.reportSummaries.map((summary, index) => {
       return (
-        <tr key={report._id}>
-          <td>{week}</td>
-          <td>{year}</td>
-          <td>{report.reports.length}</td>
-          <td>{this.getWeeklySummaryStatus(report.summary)}</td>
-          <td>{!report.summary || report.summary.totalReward === 0 ? 'Not yet assigned' : report.summary.totalReward}</td>
+        <tr key={summary._id}>
+          <td>{moment(summary.reportsEndDate).isoWeek()}</td>
+          <td>{moment(summary.reportsEndDate).year()}</td>
+          <td>{summary.totalReports}</td>
+          <td>{this.getWeeklySummaryStatus(summary)}</td>
+          <td>{!summary || summary.totalReward === 0 ? 'Not yet assigned' : summary.totalReward}</td>
           <td>
-            {this.editButtonEnabled(report.summary) ? <button className="btn btn-sm btn-success" onClick={e => history.push('/council/reports/edit/' + report.summary._id)}><i className="fa fa-pencil"> </i> Edit</button> : ''}
-            {this.voteButtonEnabled(report.summary) ? <button className="btn btn-sm btn-warning" onClick={e => history.push('/council/reports/vote/' + report.summary._id)}><i className="fa fa-hand-paper-o"> </i> Vote</button> : ''}
-            <button className="btn btn-sm btn-primary" onClick={e => history.push('/council/reports/view/' + report.summary._id)}><i
+            {this.voteButton(summary)}
+            {this.editButtonEnabled(summary) ? <button className="btn btn-sm btn-success" onClick={e => history.push('/council/reports/edit/' + summary._id)}><i className="fa fa-pencil"> </i> Edit</button> : ''}
+            <button className="btn btn-sm btn-primary" onClick={e => history.push('/council/reports/view/' + summary._id)}><i
               className="fa fa-eye"> </i> View
             </button>
           </td>
@@ -122,13 +97,13 @@ class AdminReportsOverview extends Component {
           <div className="col-lg-9">
             <div className="card">
               <div className="card-header">
-                <i className="fa fa-align-justify"></i> Reports
+                <i className="fa fa-align-justify"></i> Reports Overview
               </div>
               <div className="card-block">
                 <ContentTable
                   headers={headers}
                   items={items}
-                  pages={this.state.pages}
+                  pages={Math.ceil(this.props.reportSummaries.length / this.state.maxItemsPerPage)}
                   currentPage={this.state.currentPage}
                   changePageCallback={this.changePageCallback}
                 />
@@ -143,8 +118,5 @@ class AdminReportsOverview extends Component {
     )
   }
 }
-
-ReactMixin(AdminReportsOverview.prototype, TrackerReactMixin);
-
 
 export default AdminReportsOverview;

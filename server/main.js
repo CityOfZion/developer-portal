@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import {addReportSummary} from "../imports/reports";
 
 Meteor.startup(() => {
   Accounts.urls.resetPassword = (token) => Meteor.absoluteUrl(`reset-password/${token}`);
@@ -22,4 +23,6 @@ Meteor.startup(() => {
     }
     
   });
+  
+  addReportSummary();
 });

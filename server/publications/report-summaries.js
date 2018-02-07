@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 Meteor.publish('reportSummaries', function() {
   if(Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
     return ReportSummaries.find({});
@@ -13,6 +11,10 @@ Meteor.publish('reportSummaryById', function(id) {
 });
 
 Meteor.publish('currentSummary', function() {
+  if(!Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) return null;
+  
   const now = new Date();
-  return ReportSummaries.find({reportsStartDate: {$lte: now}, reportsEndDate: {$gte: now}});
+  const query = {reportsStartDate: {$lte: now}, reportsEndDate: {$gte: now}};
+  const results = ReportSummaries.find(query);
+  return results;
 });

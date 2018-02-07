@@ -5,7 +5,7 @@ Meteor.methods({
     check(chatId, String);
     check(message, String);
     
-    return Messages.update({_id: chatId}, {
+    return UserMessages.update({_id: chatId}, {
       $push: {
         messages: {
           dateSent: new Date(),
@@ -19,7 +19,7 @@ Meteor.methods({
   createChat(targetUser) {
     check(targetUser, String);
     
-    return Messages.insert({
+    return UserMessages.insert({
       fromUserId: Meteor.userId(),
       toUserId: targetUser,
       messages: []

@@ -18,7 +18,7 @@ const getPaths = (pathname) => {
   return paths;
 };
 
-const BreadcrumbsItem = ({ ...rest, match }) => {
+const BreadcrumbsItem = ({  match, ...rest }) => {
   const routeName = findRouteName(match.url);
   if (routeName) {
     return (
@@ -28,7 +28,7 @@ const BreadcrumbsItem = ({ ...rest, match }) => {
       ) :
       (
         <BreadcrumbItem>
-          <Link to={match.url || ''}>
+          <Link to={match.url ? (match.url === '/' ?  '/dashboard' : match.url) : '/dashboard'}>
             {routeName}
           </Link>
         </BreadcrumbItem>
@@ -38,7 +38,7 @@ const BreadcrumbsItem = ({ ...rest, match }) => {
   return null;
 };
 
-const Breadcrumbs = ({ ...rest, location : { pathname }, match }) => {
+const Breadcrumbs = ({location : { pathname }, match, ...rest }) => {
   const paths = getPaths(pathname);
   const i = 0;
   const items = paths.map((path, i) => <Route key={i++} path={path} component={BreadcrumbsItem} />);

@@ -14,7 +14,7 @@ Meteor.methods({
       const endOfWeek = moment(startOfWeek).endOf('isoWeek');
       
       const query = {userId: Meteor.userId(), reportedOn: {$gte: startOfWeek.toDate(), $lt: endOfWeek.toDate()}};
-      const report = Reports.find(query).count();
+      const report = UserReports.find(query).count();
       
       if (report) {
         return {error: 'Report already submitted'};
@@ -30,7 +30,7 @@ Meteor.methods({
         votes: []
       };
       
-      const result = Reports.insert(data);
+      const result = UserReports.insert(data);
       
       ReportSummaries.update({reportsEndDate: {$gte: reportedOn}, reportsStartDate: {$lte: reportedOn}}, {$inc: {totalReports: 1}});
       
@@ -48,7 +48,7 @@ Meteor.methods({
         return {error: 'userNotAuthorized'}
       }
       
-      const report = Reports.findOne({_id: id, userId: Meteor.userId()});
+      const report = UserReports.findOne({_id: id, userId: Meteor.userId()});
   
       if (!report) {
         return {error: 'Invalid user'};
@@ -58,7 +58,7 @@ Meteor.methods({
         return {error: 'This week is not available for editing'};
       }
   
-      const result = Reports.update({_id: id}, {$set: {content, updatedOn: new Date()}});
+      const result = UserReports.update({_id: id}, {$set: {content, updatedOn: new Date()}});
   
       return {result};
     } catch(e) {
@@ -74,7 +74,7 @@ Meteor.methods({
         return {error: 'userNotAuthorized'}
       }
   
-      const result = Reports.update({_id: id}, {$set: {status: status, updatedOn: new Date()}});
+      const result = UserReports.update({_id: id}, {$set: {status: status, updatedOn: new Date()}});
   
       return {result};
     } catch (e) {
@@ -94,28 +94,42 @@ Meteor.methods({
         return {error: 'invalidVoteAmount'};
       }
   
-      const hasVoted = Reports.find({_id: id, 'votes.userId': Meteor.userId()}).count();
+      const hasVoted = UserReports.find({_id: id, 'votes.userId': Meteor.userId()}).count();
   
       let result = null;
   
       // If user has voted already, update vote instead
       if (hasVoted) {
-        result = Reports.update({_id: id, 'votes.userId': Meteor.userId()}, {$set: {'votes.$.vote': vote}});
+        result = UserReports.update({_id: id, 'votes.userId': Meteor.userId()}, {$set: {'votes.$.vote': vote}});
       } else {
-        result = Reports.update({_id: id}, {$push: {votes: {userId: Meteor.userId(), vote: vote}}});
+        result = UserReports.update({_id: id}, {$push: {votes: {userId: Meteor.userId(), vote: vote}}});
       }
   
-      const report = Reports.findOne({_id: id});
+      const report = UserReports.findOne({_id: id});
       const summary = ReportSummaries.findOne({reportsEndDate: {$gte: report.reportedOn}, reportsStartDate: {$lte: report.reportedOn}});
       
-      // closing date isnt set yet
+      // closing date isn't set yet
       if(!summary.votingCloseDate) {
-        const totalReportsVoted = Reports.find({'votes.userId': Meteor.userId()}).count();
+        const totalReportsVoted = UserReports.find({'votes.userId': Meteor.userId()}).count();
         const totalReports = summary.totalReports;
   
         // If true then start countdown for others to vote
         if (totalReports === totalReportsVoted) {
-          ReportSummaries.update({_id: summary._id}, {$set: {votingCloseDate: moment(moment().add(5, 'days')).toDate()}});
+          const closingDate = moment(moment().add(5, 'days'));
+          console.log('Setting the closing date to: ', closingDate.toISOString());
+          ReportSummaries.update({_id: summary._id}, {$set: {votingCloseDate: closingDate.toDate()}});
+  
+          SyncedCron.add({
+            name: 'Close voting',
+            schedule: function(parser) {
+              return parser.recur().on(closingDate.toDate()).fullDate();
+            },
+            job: function() {
+              ReportSummaries.update({votingCloseDate: {$gt: new Date()}}, {votingOpen: false, votingCompleted: true})
+            }
+          });
+          
+          SyncedCron.start();
         }
       }
   

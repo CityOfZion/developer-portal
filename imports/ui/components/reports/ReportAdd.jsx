@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
 import {replaceURLWithHTMLLinks} from '/imports/helpers/helpers';
 import showdown from 'showdown';
@@ -102,8 +100,5 @@ class ReportAdd extends Component {
     )
   }
 }
-
-ReactMixin(ReportAdd.prototype, TrackerReactMixin);
-
 
 export default ReportAdd;

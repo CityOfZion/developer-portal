@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactMixin from 'react-mixin';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import ContentTable from "../widgets/ContentTable";
@@ -9,9 +8,6 @@ class ReportsOverview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subscription: {
-        reports: Meteor.subscribe('reports')
-      },
       maxItemsPerPage: 10,
       totalItems: 0,
       currentPage: 1,
@@ -19,12 +15,8 @@ class ReportsOverview extends Component {
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.reports.stop();
-  }
-  
   reports() {
-    return Reports.find({}, {sort: {week: -1}, limit: this.state.maxItemsPerPage, skip: (this.state.currentPage - 1) * this.state.maxItemsPerPage}).fetch();
+    return UserReports.find({}, {sort: {week: -1}, limit: this.state.maxItemsPerPage, skip: (this.state.currentPage - 1) * this.state.maxItemsPerPage}).fetch();
   }
   
   componentDidUpdate() {
@@ -32,7 +24,7 @@ class ReportsOverview extends Component {
   }
   
   reportCount() {
-    const reportsCount = Reports.find({}).count();
+    const reportsCount = UserReports.find({}).count();
     const pages = Math.ceil(reportsCount / this.state.maxItemsPerPage);
     if(pages !== this.state.pages) this.setState({pages: pages});
     return reportsCount;
@@ -105,8 +97,5 @@ class ReportsOverview extends Component {
       )
   }
 }
-
-ReactMixin(ReportsOverview.prototype, TrackerReactMixin);
-
 
 export default ReportsOverview;

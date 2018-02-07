@@ -1,6 +1,6 @@
 Meteor.publish('reports', function () {
   if (Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
-    ReactiveAggregate(this, Reports, [
+    ReactiveAggregate(this, UserReports, [
       {
         $project: {
           votes: "$votes",
@@ -29,31 +29,31 @@ Meteor.publish('reports', function () {
       }
     ]);
   } else {
-    return Reports.find({userId: Meteor.userId()}, {votes: 0});
+    return UserReports.find({userId: Meteor.userId()}, {votes: 0});
   }
 });
 
 Meteor.publish('reportById', function (id) {
   if (Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
-    return Reports.find({_id: id});
+    return UserReports.find({_id: id});
   }
   
-  return Reports.find({_id: id, userId: Meteor.userId()}, {votes: 0});
+  return UserReports.find({_id: id, userId: Meteor.userId()}, {votes: 0});
 });
 
 Meteor.publish('reportsByYearWeek', function (yearWeek) {
   if (Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
-    return Reports.find({week: week});
+    return UserReports.find({week: week});
   }
-  return Reports.find({week: week, userId: Meteor.userId()}, {votes: 0});
+  return UserReports.find({week: week, userId: Meteor.userId()}, {votes: 0});
 });
 
-Meteor.publish('admin.reportsOverviewBySummaryId', function(reportSummaryId) {
+Meteor.publish('adminReportsOverviewBySummaryId', function(reportSummaryId) {
   if (!Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) return null;
   
   const reportSummary = ReportSummaries.findOne({_id: reportSummaryId});
   
-  ReactiveAggregate(this, Reports, [
+  ReactiveAggregate(this, UserReports, [
     {
       $match: {
         reportedOn: {
@@ -82,7 +82,8 @@ Meteor.publish('admin.reportsOverviewBySummaryId', function(reportSummaryId) {
         content: "$content",
         reportedOn: "$reportedOn",
         user: {
-          username: "$user.username"
+          username: "$user.username",
+          mainWalletAddress: "$user.profile.mainWalletAddress"
         },
         week: {"$week": "$reportedOn"},
         year: {"$year": "$reportedOn"},
