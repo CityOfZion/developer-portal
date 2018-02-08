@@ -4,9 +4,9 @@ import { render } from 'react-dom';
 import { Router, Route, Switch, Redirect } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
 // Containers
-import Full from './containers/Full/'
+import Full from '/imports/ui/Containers/Full/'
 // Views
-import LoginContainer from '/imports/ui/containers/LoginContainer'
+import LoginContainer from '/imports/ui/Containers/LoginContainer'
 import Register from './views/Pages/Register/'
 import Page404 from './views/Pages/Page404/'
 import Page500 from './views/Pages/Page500/'
