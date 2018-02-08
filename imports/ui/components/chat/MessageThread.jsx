@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import Chat from "../subcomponents/Chat";
 import Keypress from "react-keypress";
 
@@ -9,9 +7,6 @@ class MessageThread extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subscription: {
-        messages: Meteor.subscribe('messagesById', this.props.match.params.id)
-      },
       message: ''
     }
   }
@@ -28,16 +23,8 @@ class MessageThread extends Component {
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.messages.stop();
-  }
-  
-  messages() {
-    return Messages.find().fetch();
-  }
-  
   render() {
-    const messages = this.messages()[0] || {messages: []};
+    const messages = this.props.messages && this.props.messages[0] ? this.props.messages[0] : {messages: []};
     return (
       <div className="animated fadeIn">
         <div className="row">
@@ -61,8 +48,5 @@ class MessageThread extends Component {
     )
   }
 }
-
-ReactMixin(MessageThread.prototype, TrackerReactMixin);
-
 
 export default MessageThread;

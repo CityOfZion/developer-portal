@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
+import Spinner from 'react-spinkit';
 
 class ProfileView extends Component {
   
   render() {
     const {history} = this.props;
-    if(!Meteor.user()) return <div></div>;
+    if(!Meteor.user()) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     
     const {profile} = Meteor.user();
     return (

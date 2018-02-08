@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
 import moment from 'moment';
+import Spinner from 'react-spinkit';
 
 class AdminReportSummaryEdit extends Component {
   
@@ -10,9 +9,6 @@ class AdminReportSummaryEdit extends Component {
     super(props);
     this.state = {
       initialized: false,
-      subscription: {
-        reportSummaries: Meteor.subscribe('reportSummaryById', this.props.match.params.id)
-      },
       editReportSummaryError: false,
       editReportSummaryErrorMessage: '',
       editReportSummarySuccess: false,
@@ -21,15 +17,11 @@ class AdminReportSummaryEdit extends Component {
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.reportSummaries.stop();
-  }
-  
-  componentDidUpdate(prevProps, prevState) {
-    if (this.reportSummaries().length > 0 && this.reportSummaries()[0].totalReward !== this.state.totalReward && !this.state.initialized) {
+  componentWillReceiveProps(props) {
+    if (this.props.reportSummaries.length > 0 && this.props.reportSummaries[0].totalReward !== this.state.totalReward && !this.state.initialized) {
       this.setState({
-        totalReward: this.reportSummaries()[0].totalReward,
-        summaryId: this.reportSummaries()[0]._id,
+        totalReward: this.props.reportSummaries[0].totalReward,
+        summaryId: this.props.reportSummaries[0]._id,
         initialized: true
       });
     }
@@ -37,10 +29,6 @@ class AdminReportSummaryEdit extends Component {
   
   resetForm() {
     this.setState({totalReward: 0});
-  }
-  
-  reportSummaries() {
-    return ReportSummaries.find({}).fetch();
   }
   
   submitForm() {
@@ -60,9 +48,10 @@ class AdminReportSummaryEdit extends Component {
   }
   
   render() {
-    const {history} = this.props;
-    const report = this.reportSummaries()[0] || {};
+    const {history, reportSummaries} = this.props;
+    const report = reportSummaries && reportSummaries()[0] ? reportSummaries[0] : false;
     
+    if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     
     return (
       <div className="animated fadeIn">
@@ -137,8 +126,5 @@ class AdminReportSummaryEdit extends Component {
     )
   }
 }
-
-ReactMixin(AdminReportSummaryEdit.prototype, TrackerReactMixin);
-
 
 export default AdminReportSummaryEdit;

@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
-import ReportEdit from "../../../components/reports/ReportEdit";
+import ReportView from "../../../components/reports/ReportView";
 
-export default ReportEditContainer = withTracker(props => {
+export default ReportViewContainer = withTracker(props => {
   const reportsHandle = Meteor.subscribe('reportById', props.match.params.id);
   
   const loading = !reportsHandle.ready();
@@ -12,4 +12,4 @@ export default ReportEditContainer = withTracker(props => {
     loading,
     reports
   };
-})(ReportEdit);
+})(ReportView);

@@ -1,31 +1,21 @@
 import React, { Component } from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
+import Spinner from 'react-spinkit';
 
 class MessagesOverview extends Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      subscription: {
-        messages: Meteor.subscribe('messages')
-      },
       selectedMessages: [],
       selectedFilters: []
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.messages.stop();
-  }
-  
-  messages() {
-    const msgs = Messages.find({}).fetch();
-    return msgs;
-  }
-  
   render() {
     const {history} = this.props;
+    
+    if(!this.props.messages) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
+    
     return (
       <div className="animated fadeIn">
         <div className="row">
@@ -45,7 +35,7 @@ class MessagesOverview extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {this.messages().map((message, index) => {
+                {this.props.messages.map((message, index) => {
                   let hasUnread = false;
                   for(let i = 0; i < message.messages.length; i++) {
                     if(!message.messages[i].read) {
@@ -88,8 +78,5 @@ class MessagesOverview extends Component {
     )
   }
 }
-
-ReactMixin(MessagesOverview.prototype, TrackerReactMixin);
-
 
 export default MessagesOverview;

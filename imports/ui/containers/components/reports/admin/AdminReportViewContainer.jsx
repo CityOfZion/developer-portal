@@ -2,9 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import AdminReportView from "../../../../components/reports/admin/AdminReportView";
 
-export default AdminReportsOverviewContainer = withTracker(props => {
-  
-  console.log('AdminReportsOverviewContainer', props);
+export default AdminReportViewContainer = withTracker(props => {
   
   const reportsHandler = Meteor.subscribe('adminReportsOverviewBySummaryId', props.match.params.id);
   const reportSummariesHandler = Meteor.subscribe('reportSummaryById', props.match.params.id);

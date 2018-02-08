@@ -1,19 +1,14 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
 import showdown from 'showdown';
 import {replaceURLWithHTMLLinks} from '/imports/helpers/helpers';
+import Spinner from 'react-spinkit';
 
 class ReportEdit extends Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      initialized: false,
-      subscription: {
-        report: Meteor.subscribe('reportById', this.props.match.params.id)
-      },
       editReportError: false,
       editReportErrorMessage: '',
       editReportSuccess: false,
@@ -21,22 +16,8 @@ class ReportEdit extends Component {
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.report.stop();
-  }
-  
-  componentDidUpdate(prevProps, prevState) {
-    if (this.report().length > 0 && this.report()[0].content !== this.state.content && !this.state.initialized) {
-      this.setState({content: this.report()[0].content, initialized: true});
-    }
-  }
-  
   resetForm() {
     this.setState({content: ''});
-  }
-  
-  report() {
-    return Reports.find({_id: this.props.match.params.id}).fetch();
   }
   
   submitForm() {
@@ -58,7 +39,9 @@ class ReportEdit extends Component {
   render() {
     const {history} = this.props;
     const converter = new showdown.Converter();
-    const report = this.report()[0] || {};
+    const report = this.props.reports && this.props.reports[0] ? this.props.reports[0] : false;
+    
+    if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     
     return (
       <div className="animated fadeIn">
@@ -119,8 +102,5 @@ class ReportEdit extends Component {
     )
   }
 }
-
-ReactMixin(ReportEdit.prototype, TrackerReactMixin);
-
 
 export default ReportEdit;

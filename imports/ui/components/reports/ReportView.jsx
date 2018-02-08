@@ -1,34 +1,18 @@
 import React, { Component } from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
 import showdown from 'showdown';
+import Spinner from 'react-spinkit';
 
 class ReportView extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      subscription: {
-        report: Meteor.subscribe('reportById', this.props.match.params.id)
-      }
-    }
-  }
-  
-  componentWillUnmount() {
-    this.state.subscription.report.stop();
-  }
-  
-  report() {
-    return Reports.find({}).fetch();
-  }
   
   render() {
     const {history} = this.props;
     const converter = new showdown.Converter();
-    const report = this.report()[0] || {};
+    const report = this.props.reports && this.props.reports[0] ? this.props.reports[0] : false;
   
+    if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
+    
     return (
       <div className="animated fadeIn">
         <div className="row">
@@ -60,8 +44,5 @@ class ReportView extends Component {
     )
   }
 }
-
-ReactMixin(ReportView.prototype, TrackerReactMixin);
-
 
 export default ReportView;

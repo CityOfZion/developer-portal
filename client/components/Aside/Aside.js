@@ -6,7 +6,6 @@ import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import Alerts from "../../../imports/ui/containers/components/aside/AlertsContainer";
 import Tasks from "../../../imports/ui/containers/components/aside/TasksContainer";
 import Comments from "../../../imports/ui/containers/components/aside/CommentsContainer";
-import VisibilitySensor from 'react-visibility-sensor';
 
 class Aside extends Component {
   constructor(props) {

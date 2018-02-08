@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import VisibilitySensor from 'react-visibility-sensor';
+import Spinner from 'react-spinkit';
 
 class Alerts extends Component {
   
   setAlertsRead() {
     Meteor.call('readAlerts', (err, res) => {
-      console.log('setting alerts read');
     });
   }
   
@@ -30,7 +29,7 @@ class Alerts extends Component {
   }
   
   render() {
-    if(this.props.loading) return <div></div>;
+    if(this.props.loading) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     return <div>
       <div className="callout m-0 py-2 text-center bg-danger text-uppercase border-dark">
         <small><b>Alerts</b></small>

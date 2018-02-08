@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
 import showdown from 'showdown';
 import moment from 'moment';
 import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
 import FoldingCard from "../../widgets/FoldingCard";
 import ContentTable from "../../widgets/ContentTable";
+import Spinner from 'react-spinkit';
 
 class AdminReportView extends Component {
   
@@ -20,7 +20,6 @@ class AdminReportView extends Component {
   }
   
   getVoteAverage(votes) {
-    
     return this.getVoteTotals(votes) / votes.length;
   }
   
@@ -31,14 +30,11 @@ class AdminReportView extends Component {
   }
   
   componentWillReceiveProps(props) {
-    console.log('componentWillReceiveProps', props);
     this.countVotes(props.joinedReportSummaries);
   }
   
   countVotes(summaries) {
     const joinedReportSummary = summaries.length > 0 ? summaries[0] : false;
-  
-    console.log('countVotes', summaries);
     
     if(!joinedReportSummary || this.state.initialized) return false;
     
@@ -49,8 +45,6 @@ class AdminReportView extends Component {
         return a + b.vote;
       }, 0);
     });
-    
-    console.log('countVotes', {totalVotes: totalAmountOfVotes, initialized: true});
     
     this.setState({totalVotes: totalAmountOfVotes, initialized: true});
   }
@@ -169,7 +163,6 @@ class AdminReportView extends Component {
   
     const joinedReportSummary = joinedReportSummaries.length > 0 ? joinedReportSummaries[0] : false;
     
-    console.log('joinedReportSummary', joinedReportSummary);
     
     return (
       <div className="animated fadeIn">

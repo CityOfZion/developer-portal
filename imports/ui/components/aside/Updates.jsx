@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import Spinner from 'react-spinkit';
 
 class Updates extends Component {
   render() {
-    console.log(this.props);
-    if(this.props.loading) return <div></div>;
+    if(this.props.loading) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     if(this.props.updates.length === 0) return <div>No updates</div>;
   
     return <div>

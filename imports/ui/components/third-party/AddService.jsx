@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
-import {Route, Redirect} from 'react-router'
+import {Route, Redirect} from 'react-router';
+import Spinner from 'react-spinkit';
 
 class AddService extends Component {
   
@@ -23,7 +23,6 @@ class AddService extends Component {
     const searchQuery = this.props.history.location.search.replace('?', '');
     const parsedQuery = new URLSearchParams(searchQuery);
     Meteor.call('addSlackServiceData', parsedQuery.get('code'), (err, res) => {
-      console.log(err, res);
       if (err) {
         this.setState({editReportError: true, editReportErrorMessage: err.reason});
       } else {
@@ -39,7 +38,7 @@ class AddService extends Component {
   render() {
     const {history} = this.props;
     
-    if (!Meteor.user()) return <div></div>;
+    if (!Meteor.user()) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     
     if (this.state.editReportSuccess) return <Redirect to="/profile"/>;
     

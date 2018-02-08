@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import ContentTable from "../../widgets/ContentTable";
+import Spinner from 'react-spinkit';
 
 class AdminReportsOverview extends Component {
   
@@ -69,7 +68,8 @@ class AdminReportsOverview extends Component {
   
   render() {
     const {history} = this.props;
-    const currentWeek = moment().isoWeek();
+    
+    if(!this.props.reportSummaries) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     
     const headers = ['Week', 'Year', 'Reports', 'Status', 'Rewards', 'Action'];
     const items = this.props.reportSummaries.map((summary, index) => {

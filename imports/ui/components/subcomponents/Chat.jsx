@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import Initicon from 'react-initicon';
 
 class Chat extends Component {
@@ -75,8 +73,5 @@ class Chat extends Component {
     )
   }
 }
-
-ReactMixin(Chat.prototype, TrackerReactMixin);
-
 
 export default Chat;

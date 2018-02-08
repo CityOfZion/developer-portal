@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
 import showdown from 'showdown';
 import moment from 'moment';
 import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
 import FoldingCard from "../../widgets/FoldingCard";
+import Spinner from 'react-spinkit';
 
 class AdminReportDistributionView extends Component {
   
@@ -13,25 +12,16 @@ class AdminReportDistributionView extends Component {
     super(props);
     this.state = {
       initialized: false,
-      subscription: {
-        reportSummaries: Meteor.subscribe('reportSummaryById', this.props.match.params.id),
-        reports: Meteor.subscribe('admin.reportsOverviewBySummaryId', this.props.match.params.id)
-      },
       totalReward: 0,
       summaryId: ''
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.reportSummaries.stop();
-    this.state.subscription.reports.stop();
-  }
-  
   componentDidUpdate(prevProps, prevState) {
-    if (this.reportSummaries().length > 0 && this.reportSummaries()[0].totalReward !== this.state.totalReward && !this.state.initialized) {
+    if (this.props.reportSummaries.length > 0 && this.props.reportSummaries[0].totalReward !== this.state.totalReward && !this.state.initialized) {
       this.setState({
-        totalReward: this.reportSummaries()[0].totalReward,
-        summaryId: this.reportSummaries()[0]._id,
+        totalReward: this.props.reportSummaries[0].totalReward,
+        summaryId: this.props.reportSummaries[0]._id,
         initialized: true
       });
     }
@@ -39,16 +29,6 @@ class AdminReportDistributionView extends Component {
   
   resetForm() {
     this.setState({totalReward: 0});
-  }
-  
-  reportSummaries() {
-    const result = ReportSummaries.find({_id: this.props.match.params.id}).fetch();
-    return result;
-  }
-  
-  reports() {
-    const reports = AdminReports.find({}).fetch();
-    return reports;
   }
   
   submitForm() {
@@ -68,11 +48,12 @@ class AdminReportDistributionView extends Component {
   }
   
   render() {
-    const {history} = this.props;
-    const report = this.reportSummaries()[0] || {};
-    const reports = this.reports()[0] || {reports: []};
+    const {history, reportSummaries} = this.props;
+    const report = reportSummaries && reportSummaries()[0] ? reportSummaries[0] : false;
     const converter = new showdown.Converter();
     
+    if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
+  
     return (
       <div className="animated fadeIn">
         <div className="row">

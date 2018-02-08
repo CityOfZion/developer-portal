@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import ReactMixin from 'react-mixin';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
@@ -11,16 +10,13 @@ class AdminReportVoting extends Component {
     super(props);
     this.state = {
       initialized: false,
-      subscription: {
-        reports: Meteor.subscribe('admin.reportsOverviewBySummaryId', this.props.match.params.id)
-      },
       currentReportIndex: 0,
       currentReport: false
     }
   }
   
   componentDidUpdate(prevProps, prevState) {
-    const reports = this.reports()[0] || {reports: []};
+    const reports = this.props.reports[0] || {reports: []};
     const report = reports.reports[this.state.currentReportIndex];
     if (!this.state.initialized && report) {
       this.setState({
@@ -30,16 +26,10 @@ class AdminReportVoting extends Component {
     }
   }
   
-  componentWillUnmount() {
-    this.state.subscription.reports.stop();
-  }
-  
   vote(amount) {
-    this.state.subscription.reports.stop();
     Meteor.call('addVoteToReport', this.state.currentReport._id, amount, (err, res) => {
       this.setState({
-        initialized: false,
-        subscription: {reports: Meteor.subscribe('admin.reportsOverviewBySummaryId', this.props.match.params.id)}
+        initialized: false
       });
       const reports = this.reports()[0] || {reports: []};
       const report = reports.reports[this.state.currentReportIndex];
@@ -104,7 +94,7 @@ class AdminReportVoting extends Component {
   
   render() {
     const {history} = this.props;
-    const reports = this.reports()[0] || {reports: []};
+    const reports = this.props.reports[0] || {reports: []};
     const converter = new showdown.Converter();
     return (
       <div>
@@ -158,8 +148,5 @@ class AdminReportVoting extends Component {
     )
   }
 }
-
-ReactMixin(AdminReportVoting.prototype, TrackerReactMixin);
-
 
 export default AdminReportVoting;

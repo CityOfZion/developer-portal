@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import Spinner from 'react-spinkit';
 
 class Tasks extends Component {
   render() {
-    if(this.props.loading) return <div></div>;
+    if(this.props.loading) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     if(this.props.tasks.length === 0) return <div>No tasks</div>;
     
     return <div>

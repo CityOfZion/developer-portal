@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import ErrorModal from "/imports/ui/components/ErrorModal";
+import Spinner from 'react-spinkit';
 
 class ProfileEdit extends Component {
   
@@ -37,14 +37,12 @@ class ProfileEdit extends Component {
   
   componentDidUpdate(prevProps, prevState) {
     if (Meteor.user().profile && !this.state.initialized) {
-      console.log(Meteor.user());
       this.setState({initialized: true, profile: Meteor.user().profile});
     }
   }
   
   submitForm() {
     Meteor.call('editProfile', this.state.profile, (err, res) => {
-      console.log(err, res);
       if (err) {
         this.setState({editProfileError: true, editProfileErrorMessage: err.reason});
       } else {
@@ -60,7 +58,7 @@ class ProfileEdit extends Component {
   render() {
     const {history} = this.props;
     
-    if (!Meteor.user()) return <div></div>;
+    if (!Meteor.user()) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     const {profile} = Meteor.user();
     
     return (
