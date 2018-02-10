@@ -1,5 +1,6 @@
 import { check } from 'meteor/check';
 import moment from 'moment';
+import { Jobs } from 'meteor/msavin:sjobs';
 
 Meteor.methods({
   addReport(content) {
@@ -119,17 +120,16 @@ Meteor.methods({
           console.log('Setting the closing date to: ', closingDate.toISOString());
           ReportSummaries.update({_id: summary._id}, {$set: {votingCloseDate: closingDate.toDate()}});
   
-          SyncedCron.add({
-            name: 'Close voting',
-            schedule: function(parser) {
-              return parser.recur().on(closingDate.toDate()).fullDate();
+          Jobs.run("closeVoting", summary._id, {
+            in: {
+              days: 5,
             },
-            job: function() {
-              ReportSummaries.update({votingCloseDate: {$gt: new Date()}}, {votingOpen: false, votingCompleted: true})
-            }
+            on: {
+              hour: closingDate.hour(),
+              minute: closingDate.minute()
+            },
+            priority: 9999999999
           });
-          
-          SyncedCron.start();
         }
       }
   
