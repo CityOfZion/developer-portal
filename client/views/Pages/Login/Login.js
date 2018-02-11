@@ -57,7 +57,7 @@ class Login extends Component {
                     }
                   </div>
                 </div>
-                <div className="card card-inverse card-primary py-5 d-md-down-none" style={{ width: 44 + '%' }}>
+                <div className="card card-inverse card-primary py-5 " style={{ width: '100%' }}>
                   <div className="card-block text-center">
                     <div>
                       <h2>Sign up</h2>
