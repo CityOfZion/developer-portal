@@ -71,27 +71,15 @@ class ProfileEdit extends Component {
               </div>
               <div className="card-block">
                 <div className="form-group row">
-                  <label className="col-md-3 form-control-label">Slack</label>
-                  <div className="col-md-9">
-                    <p className="form-control-static">
-                      {profile && Meteor.user().profile.slack ? 'You have already linked Slack to this account' :
-                        <a
-                          href="https://cityofzion.slack.com/oauth?scope=identity.basic,identity.email,identity.avatar&client_id=271026793490.291142936117&redirect_uri=http%3A%2F%2F6a1668a4.ngrok.io%2Fthird-party%2Fauth%2Fslack">
-                          <img src="https://api.slack.com/img/sign_in_with_slack.png"/>
-                        </a>}
-                    </p>
-                  </div>
-                </div>
-                <div className="form-group row">
                   <label className="col-md-3 form-control-label">Username</label>
                   <div className="col-md-9">
-                    <p className="form-control-static">{Meteor.user().username}</p>
+                    <p className="form-control-static">{profile.username}</p>
                   </div>
                 </div>
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label" htmlFor="text-input">Email</label>
                   <div className="col-md-9">
-                    <p className="form-control-static">{Meteor.user().emails[0].address}</p>
+                    <p className="form-control-static">{profile.emails[0].address}</p>
                   </div>
                 </div>
                 <div className="form-group row">
