@@ -10,6 +10,7 @@ class Register extends Component {
     this.state = {
       userCreated: false,
       userCreatedError: false,
+      loading: false,
       userCreatedErrorMessage: '',
       username: '',
       password: '',
@@ -67,6 +68,10 @@ class Register extends Component {
     this.setState({passwordRepeat: value, passwordRepeatErrors: passwordRepeatErrors})
   };
   
+  loadingModal = result => {
+    this.setState({loading: result});
+  };
+  
   userCreatedModalFeedback = result => {
     if (result) this.props.history.push('/login');
     else this.setState({userCreated: false});
@@ -77,6 +82,7 @@ class Register extends Component {
   };
   
   register() {
+    this.setState({loading: true});
     this.usernameInput(this.state.username);
     this.emailInput(this.state.email);
     this.passwordInput(this.state.password);
@@ -98,10 +104,10 @@ class Register extends Component {
           this.setState({userCreated: true});
           Meteor.call('sendVerificationLink', res.result, (err, res) => {
             if (err) this.setState({userCreatedError: true, userCreatedErrorMessage: err.reason});
-            else this.setState({userCreated: true});
+            else this.setState({userCreated: true, loading: false});
           })
         } else {
-          this.setState({userCreatedError: true, userCreatedErrorMessage: err.reason});
+          this.setState({userCreatedError: true, userCreatedErrorMessage: err.reason, loading: false});
         }
       })
     }
@@ -176,6 +182,14 @@ class Register extends Component {
             </div>
           </div>
         </div>
+        <ErrorModal
+          type="success"
+          opened={this.state.loading}
+          disableCancel={true}
+          disableConfirm={true}
+          message="Creating your account"
+          title="Loading"
+          callback={this.userCreatedModalFeedback}/>
         <ErrorModal
           type="success"
           opened={this.state.userCreated}

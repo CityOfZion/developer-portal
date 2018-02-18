@@ -116,17 +116,18 @@ Meteor.methods({
   
         // If true then start countdown for others to vote
         if (totalReports === totalReportsVoted) {
-          const closingDate = moment(moment().add(5, 'days'));
+          const closingDate = moment(moment().add(1, 'minutes'));
           console.log('Setting the closing date to: ', closingDate.toISOString());
           ReportSummaries.update({_id: summary._id}, {$set: {votingCloseDate: closingDate.toDate()}});
   
           Jobs.run("closeVoting", summary._id, {
             in: {
-              days: 5,
+              minutes: 1,
             },
             on: {
               hour: closingDate.hour(),
-              minute: closingDate.minute()
+              minute: closingDate.minute(),
+              second: closingDate.second()
             },
             priority: 9999999999
           });

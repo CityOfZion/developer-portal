@@ -3,10 +3,10 @@ import { withTracker } from 'meteor/react-meteor-data';
 import ReportsOverview from "../../../Components/Reports/ReportsOverview";
 
 export default ReportsOverviewContainer = withTracker(() => {
-  const reportsHandler = Meteor.subscribe('report');
+  const reportsHandler = Meteor.subscribe('userReports');
   
   const loading = !reportsHandler.ready();
-  const reports = UserReports.find({}).fetch();
+  const reports = UserReports.find({}, {sort: {week: -1}}).fetch();
   
   return {
     loading,

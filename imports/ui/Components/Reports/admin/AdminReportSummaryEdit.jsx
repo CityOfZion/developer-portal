@@ -32,6 +32,12 @@ class AdminReportSummaryEdit extends Component {
     this.setState({totalReward: 0});
   }
   
+  completeDistribution() {
+    Meteor.call('completeDistribution', this.props.match.params.id, (err, res) => {
+      console.log(err, res);
+    })
+  }
+  
   submitForm() {
     if (this.state.totalReward >= 0) {
       Meteor.call('setReportSummaryTotalReward', this.props.match.params.id, parseInt(this.state.totalReward), (err, res) => {
@@ -87,19 +93,23 @@ class AdminReportSummaryEdit extends Component {
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label">Distribution</label>
                   <div className="col-md-9">
-                    <p
-                      className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
+                    <p className="form-control-static">{report.distributionCompleted ? 'Distributed' : 'Not yet distributed'}</p>
+                    {!report.distributionCompleted && !report.votingOpen && report.votingCompleted ?
+                    <button type="button" className="btn btn-sm btn-primary" onClick={e => this.completeDistribution()}><i
+                      className="fa fa-dot-circle-o"> </i> Set distribution as completed
+                    </button> : ''}
                   </div>
                 </div>
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label" htmlFor="text-input">Reward amount</label>
                   <div className="col-md-9">
-                    <input type="text" id="amount" name="amount" className="form-control"
+                    {!report.distributionCompleted ? <input type="text" id="amount" name="amount" className="form-control"
                            onChange={e => this.setState({totalReward: e.currentTarget.value})}
-                           value={this.state.totalReward} placeholder={this.state.totalReward || 'Fill in a reward'}/>
+                           value={this.state.totalReward} placeholder={this.state.totalReward || 'Fill in a reward'}/> : this.state.totalReward}
                   </div>
                 </div>
               </div>
+              {!report.distributionCompleted ?
               <div className="card-footer">
                 <button type="submit" className="btn btn-sm btn-primary" onClick={e => this.submitForm()}><i
                   className="fa fa-dot-circle-o"> </i> Submit
@@ -107,7 +117,7 @@ class AdminReportSummaryEdit extends Component {
                 <button type="reset" className="btn btn-sm btn-danger" onClick={e => this.resetForm()}><i
                   className="fa fa-ban"> </i> Reset
                 </button>
-              </div>
+              </div> : ''}
             </div>
           </div>
         </div>
@@ -120,7 +130,7 @@ class AdminReportSummaryEdit extends Component {
         <ErrorModal
           opened={this.state.editReportSummarySuccess}
           type="success"
-          message="Your report was edited"
+          message="The report summary was edited"
           title="Success"
           callback={() => this.setState({editReportSummarySuccess: false})}/>
       </div>
