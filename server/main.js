@@ -2,11 +2,18 @@ import { Meteor } from 'meteor/meteor';
 import {addReportSummary} from "../imports/reports";
 
 Meteor.startup(() => {
+
+  Accounts.emailTemplates.siteName = "City of Zion - Development Portal";
+  Accounts.emailTemplates.from     = `${Accounts.emailTemplates.siteName} <development@cityofzion.io>`;
+  
+  Accounts.emailTemplates.verifyEmail.subject = function() {
+    return '[CoZ] Developer Portal - Verification Email';
+  };
+  
   Accounts.urls.resetPassword = (token) => Meteor.absoluteUrl(`reset-password/${token}`);
   Accounts.urls.verifyEmail = (token) => Meteor.absoluteUrl(`verify-email/${token}`);
   Accounts.urls.enrollAccount = (token) => Meteor.absoluteUrl(`enroll-account/${token}`);
   Accounts.onCreateUser(function(options, user) {
-    console.log(options, user);
     user.roles = ['developer'];
     return user;
   });

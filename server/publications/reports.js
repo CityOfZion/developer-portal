@@ -29,8 +29,12 @@ Meteor.publish('reports', function () {
       }
     ]);
   } else {
-    return UserReports.find({userId: Meteor.userId()}, {votes: 0});
+    return UserReports.find({userId: Meteor.userId()});
   }
+});
+
+Meteor.publish('userReports', function() {
+  return UserReports.find({userId: Meteor.userId()});
 });
 
 Meteor.publish('reportById', function (id) {

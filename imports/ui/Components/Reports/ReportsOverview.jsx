@@ -48,18 +48,22 @@ class ReportsOverview extends Component {
   };
   
   render() {
-    const {history} = this.props;
+    const {history, reports} = this.props;
     const currentWeek = moment().isoWeek();
     
+    console.log(reports);
+    
+    if(!reports) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
+  
     const headers = ['Week', 'Report Date', 'Updated on', 'Status', 'Reward', 'Action'];
-    const items = this.reports().map((report, index) => {
+    const items = reports.map((report, index) => {
       return (
         <tr key={report._id}>
-          <td>{report.week}</td>
+          <td>{moment(report.reportedOn).isoWeek()}</td>
           <td>{moment(report.reportedOn).format('YYYY/MM/DD HH:mm:ss')}</td>
           <td>{report.updatedOn ? moment(report.updatedOn).format('YYYY/MM/DD HH:mm:ss') : 'n/a'}</td>
           <td>{report.status}</td>
-          <td>{report.reward || 'Not yet assigned'}</td>
+          <td>{report.rewardAmount || 'Not yet assigned'}</td>
           <td>
             {report.week === currentWeek ? <button className="btn btn-sm btn-warning" onClick={e => history.push('/reports/edit/' + report._id)}><i className="fa fa-pencil"> </i> Edit</button> : ''}
             <button className="btn btn-sm btn-primary" onClick={e => history.push('/reports/' + report._id)}><i

@@ -9,6 +9,7 @@ class ReportEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      initialized: false,
       editReportError: false,
       editReportErrorMessage: '',
       editReportSuccess: false,
@@ -18,6 +19,12 @@ class ReportEdit extends Component {
   
   resetForm() {
     this.setState({content: ''});
+  }
+  
+  componentWillReceiveProps(props) {
+    if(props.reports && props.reports[0] && !this.state.initialized) {
+      this.setState({initialized: false, content: props.reports[0].content});
+    }
   }
   
   submitForm() {
@@ -42,6 +49,8 @@ class ReportEdit extends Component {
     const report = this.props.reports && this.props.reports[0] ? this.props.reports[0] : false;
     
     if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
+    
+    console.log(report);
     
     return (
       <div className="animated fadeIn">

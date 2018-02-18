@@ -5,12 +5,13 @@ Meteor.methods({
   sendVerificationLink(userId) {
     try {
       if ( userId ) {
+        this.unblock();
         return Accounts.sendVerificationEmail( userId );
       } else {
         return false;
       }
     } catch(e) {
-    
+      console.log(e);
     }
     
   }

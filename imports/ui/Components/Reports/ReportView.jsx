@@ -25,6 +25,9 @@ class ReportView extends Component {
                 Status: {report.status}
               </div>
               <div className="card-header">
+                Reward: {report.rewardAmount ? report.rewardAmount : 'Not yet rewarded'}
+              </div>
+              <div className="card-header">
                 Date reported: {moment(report.reportedOn).format('YYYY-MM-DD HH:mm:ss')}
               </div>
               <div className="card-header">

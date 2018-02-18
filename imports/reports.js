@@ -66,7 +66,8 @@ const addReportSummary = () => {
   });
   
   ReportSummaries.update({
-    _id: weekAgoSummaryId ? weekAgoSummaryId : weekAgoSummary._id
+    _id: weekAgoSummaryId ? weekAgoSummaryId : weekAgoSummary._id,
+    votingCompleted: false
   }, {
     $set: {
       votingOpen: true
