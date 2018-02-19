@@ -61,10 +61,7 @@ class ReportAdd extends Component {
               </div>
               <div className="card-footer">
                 <button type="submit" className="btn btn-sm btn-primary" onClick={e => this.submitForm()}><i
-                  className="fa fa-dot-circle-o"> </i> Submit
-                </button>
-                <button type="reset" className="btn btn-sm btn-danger" onClick={e => this.resetForm()}><i
-                  className="fa fa-ban"> </i> Reset
+                  className="fa fa-dot-circle-o"> </i> Save
                 </button>
               </div>
             </div>
