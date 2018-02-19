@@ -5,8 +5,8 @@ const addReportSummary = () => {
   const thisWeekStart = moment().startOf('isoWeek');
   const thisWeekEnd = moment().endOf('isoWeek');
   
-  const weekAgoStart = moment(moment().subtract(8, 'days')).startOf('isoWeek');
-  const weekAgoEnd = moment(moment().subtract(8, 'days')).endOf('isoWeek');
+  const weekAgoStart = moment(moment().subtract(7, 'days')).startOf('isoWeek');
+  const weekAgoEnd = moment(moment().subtract(7, 'days')).endOf('isoWeek');
   const week = weekAgoStart.isoWeek();
   
   const reports = UserReports.find({reportedOn: {$gte: weekAgoStart.toDate(), $lt: weekAgoEnd.toDate()}, status: 'reported'}).fetch();
