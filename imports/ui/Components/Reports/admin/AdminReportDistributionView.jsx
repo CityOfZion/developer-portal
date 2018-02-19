@@ -60,7 +60,7 @@ class AdminReportDistributionView extends Component {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
-                <i className="fa fa-eye"> </i> Viewing report summary for week {moment(report.reportsEndDate).isoWeek()}
+                <i className="fa fa-eye"> </i> Viewing report summary for week {moment(report.reportsEndDate).subtract(1, 'd').isoWeek()}
               </div>
               <div className="card-block">
                 <div className="form-group row">

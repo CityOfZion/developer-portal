@@ -75,8 +75,8 @@ class AdminReportsOverview extends Component {
     const items = this.props.reportSummaries.map((summary, index) => {
       return (
         <tr key={summary._id}>
-          <td>{moment(summary.reportsEndDate).isoWeek()}</td>
-          <td>{moment(summary.reportsEndDate).year()}</td>
+          <td>{moment(summary.reportsEndDate).subtract(1, 'd').isoWeek()}</td>
+          <td>{moment(summary.reportsEndDate).subtract(1, 'd').year()}</td>
           <td>{summary.totalReports}</td>
           <td>{this.getWeeklySummaryStatus(summary)}</td>
           <td>{!summary || summary.totalReward === 0 ? 'Not yet assigned' : summary.totalReward}</td>
