@@ -133,9 +133,9 @@ class AdminReportView extends Component {
       const neoRewarded = Math.ceil(reportSummary.totalReward * votePercentage / 100);
       return <tr key={index}>
         <td>{report.user.username}</td>
-        <td>{voteAverage.toFixed(2)}</td>
-        <td>{votePercentage.toFixed(2)}%</td>
-        <td>{neoRewarded}</td>
+        <td>{isNaN(voteAverage) ? '-' : voteAverage.toFixed(2)}</td>
+        <td>{isNaN(votePercentage) ? '-' : votePercentage.toFixed(2)+'%'}</td>
+        <td>{isNaN(neoRewarded) ? '-' : neoRewarded}</td>
         <td>{report.user.mainWalletAddress ? report.user.mainWalletAddress : 'No address specified'}</td>
       </tr>
     });
