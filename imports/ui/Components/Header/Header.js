@@ -65,7 +65,7 @@ class Header extends Component {
         <a className="nav-link" href="/">Dashboard</a>
       </li>
       <li className="nav-item px-3">
-        <a className="nav-link" href="#">Users</a>
+        <a className="nav-link" href="/council/users">Users</a>
       </li>
       <li className="nav-item px-3">
         <a className="nav-link" href="#">Settings</a>

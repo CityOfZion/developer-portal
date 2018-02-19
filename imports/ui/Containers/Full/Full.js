@@ -16,6 +16,8 @@ import ReportAdd from "/imports/ui/Components/Reports/ReportAdd";
 import ReportsOverviewContainer from "/imports/ui/Containers/Components/Reports/ReportsOverviewContainer";
 import ReportEditContainer from "/imports/ui/Containers/Components/Reports/ReportEditContainer";
 
+import UsersOverviewContainer from "/imports/ui/Containers/Components/Users/UsersOverviewContainer";
+
 import routePermissions from '/imports/route-permissions';
 import ProfileEdit from "/imports/ui/Components/Profile/ProfileEdit";
 import ProfileView from "/imports/ui/Components/Profile/ProfileView";
@@ -63,6 +65,8 @@ class Full extends Component {
                 
                 <Route exact path="/chats" name="Chats Overview" component={MessagesOverview}/>
                 <Route path="/chats/:id" name="Chats" component={MessageThread}/>
+                
+                <Route exact path="/council/users" name="Users overview" component={UsersOverviewContainer}/>
                 
                 <Route exact path="/council/reports" name="Reports overview" component={AdminReportsOverviewContainer}/>
                 <Route exact path="/council/reports/view/:id" name="Report View" component={AdminReportViewContainer}/>

@@ -40,7 +40,7 @@ class Register extends Component {
   
   emailInput = value => {
     const emailErrors = [];
-    if (!/^[A-Z0-9\._%+-]+@[A-Z0-9\.-]+\.[A-Z]{2,}$/i.test(value)) {
+    if (!/^[A-Z0-9\._%+-]+@cityofzion.io$/i.test(value)) {
       emailErrors.push('Invalid email address');
     }
     
