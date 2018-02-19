@@ -96,13 +96,16 @@ class Header extends Component {
       const remaining = moment.duration(diff, 'milliseconds');
       string = <Link className="btn btn-danger mr-2" to="/reports/add">Report submission ends in: {remaining.days()} days {remaining.hours()} hours {remaining.minutes()} mins {remaining.seconds()} sec</Link>;
     } else {
-      if(!reportSummary.votingCloseDate) {
-        string = <Link className="btn btn-danger mr-2" to="/council/reports">Voting is open</Link>;
-      } else {
-        const endDate = moment(reportSummary.votingCloseDate);
-        const diff = endDate - now;
-        const timeRemaining = moment.duration(diff, 'milliseconds');
-        string = <Link className="btn btn-danger mr-2" to="/admin/reports">Voting ends in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins {timeRemaining.seconds()} sec</Link>;
+      if(reportSummary.votingOpen) {
+        if (!reportSummary.votingCloseDate) {
+          string = <Link className="btn btn-danger mr-2" to="/council/reports">Voting is open</Link>;
+        } else {
+          const endDate = moment(reportSummary.votingCloseDate);
+          const diff = endDate - now;
+          const timeRemaining = moment.duration(diff, 'milliseconds');
+          string = <Link className="btn btn-danger mr-2" to="/admin/reports">Voting ends
+            in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins {timeRemaining.seconds()} sec</Link>;
+        }
       }
     }
     return string;
