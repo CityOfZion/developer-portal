@@ -9,9 +9,7 @@ import Aside from '/imports/ui/Components/Aside/Aside';
 import Footer from '/imports/ui/Components/Footer/Footer';
 
 import Dashboard from '/imports/ui/Components/Dashboard'
-import MessagesOverview from "/imports/ui/Components/Chat/MessagesOverview";
 import HeaderContainer from "/imports/ui/Containers/Components/HeaderContainer";
-import MessageThread from "/imports/ui/Components/Chat/MessageThread";
 import ReportAdd from "/imports/ui/Components/Reports/ReportAdd";
 import ReportsOverviewContainer from "/imports/ui/Containers/Components/Reports/ReportsOverviewContainer";
 import ReportEditContainer from "/imports/ui/Containers/Components/Reports/ReportEditContainer";
@@ -27,6 +25,8 @@ import AdminReportViewContainer from "/imports/ui/Containers/Components/Reports/
 import AdminReportSummaryEditContainer from "/imports/ui/Containers/Components/Reports/Admin/AdminReportSummaryEditContainer";
 import AdminReportVotingContainer from "/imports/ui/Containers/Components/Reports/Admin/AdminReportVotingContainer";
 import ReportViewContainer from "/imports/ui/Containers/Components/Reports/ReportViewContainer";
+import MessageThreadContainer from "../Components/Chat/MessageThreadContainer";
+import MessagesOverviewContainer from "../Components/Chat/MessagesOverviewContainer";
 
 class Full extends Component {
   
@@ -63,8 +63,8 @@ class Full extends Component {
               <Switch>
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
                 
-                <Route exact path="/chats" name="Chats Overview" component={MessagesOverview}/>
-                <Route path="/chats/:id" name="Chats" component={MessageThread}/>
+                <Route exact path="/chats" name="Chats Overview" component={MessagesOverviewContainer}/>
+                <Route path="/chats/:id" name="Chats" component={MessageThreadContainer}/>
                 
                 <Route exact path="/council/users" name="Users overview" component={UsersOverviewContainer}/>
                 

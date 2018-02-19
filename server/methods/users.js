@@ -24,6 +24,7 @@ Meteor.methods({
   },
   registerUser(options) {
     try {
+      options.email = encodeURIComponent(options.email);
       const userId = Accounts.createUser(options);
       return {result: userId};
     } catch(e) {
