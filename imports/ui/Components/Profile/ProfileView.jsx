@@ -56,14 +56,6 @@ class ProfileView extends Component {
                     <p className="form-control-static">{profile ? profile.optionalWalletAddress : 'Not filled in'}</p>
                   </div>
                 </div>
-                <div className="form-group row">
-                <label className="col-md-3 form-control-label">Slack</label>
-                  <div className="col-md-9">
-                    <p className="form-control-static">
-                      {profile && profile.slack ? 'Your Slack has been linked' : 'Your Slack has not been linked yet'}
-                    </p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
