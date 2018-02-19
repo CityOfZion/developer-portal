@@ -11,10 +11,13 @@ Meteor.publish('reportSummaryById', function(id) {
 });
 
 Meteor.publish('currentSummary', function() {
-  if(!Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) return null;
-  
-  const now = new Date();
-  const query = {reportsStartDate: {$lte: now}, reportsEndDate: {$gte: now}};
-  const results = ReportSummaries.find(query);
-  return results;
+  if(!Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
+    const now = new Date();
+    const query = {reportsStartDate: {$lte: now}, reportsEndDate: {$gte: now}};
+    return ReportSummaries.find(query, {reportsEndDate: 1, reportsStartDate: 1});
+  } else {
+    const now = new Date();
+    const query = {reportsStartDate: {$lte: now}, reportsEndDate: {$gte: now}};
+    return ReportSummaries.find(query);
+  }
 });

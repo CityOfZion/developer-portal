@@ -90,8 +90,7 @@ class Header extends Component {
     let string = '';
     const now = moment();
     const reportSummary = this.props.reportSummary[0];
-    
-    if(!Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
+    if(Roles.userIsInRole(Meteor.userId(), ['developer'])) {
       const endDate = moment(reportSummary.reportsEndDate);
       const diff = endDate - now;
       const remaining = moment.duration(diff, 'milliseconds');

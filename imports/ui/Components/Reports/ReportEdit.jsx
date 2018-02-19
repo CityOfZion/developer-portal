@@ -17,14 +17,14 @@ class ReportEdit extends Component {
     }
   }
   
-  resetForm() {
-    this.setState({content: ''});
-  }
-  
   componentWillReceiveProps(props) {
     if(props.reports && props.reports[0] && !this.state.initialized) {
-      this.setState({initialized: false, content: props.reports[0].content});
+      this.setState({initialized: true, content: props.reports[0].content});
     }
+  }
+  
+  componentDidMount() {
+    this.componentWillReceiveProps(this.props);
   }
   
   submitForm() {
@@ -50,8 +50,6 @@ class ReportEdit extends Component {
     
     if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
     
-    console.log(report);
-    
     return (
       <div className="animated fadeIn">
         <div className="row">
@@ -75,10 +73,7 @@ class ReportEdit extends Component {
               </div>
               <div className="card-footer">
                 <button type="submit" className="btn btn-sm btn-primary" onClick={e => this.submitForm()}><i
-                  className="fa fa-dot-circle-o"> </i> Submit
-                </button>
-                <button type="reset" className="btn btn-sm btn-danger" onClick={e => this.resetForm()}><i
-                  className="fa fa-ban"> </i> Reset
+                  className="fa fa-dot-circle-o"> </i> Save
                 </button>
               </div>
             </div>
