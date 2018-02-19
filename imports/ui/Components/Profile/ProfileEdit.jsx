@@ -73,13 +73,13 @@ class ProfileEdit extends Component {
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label">Username</label>
                   <div className="col-md-9">
-                    <p className="form-control-static">{profile.username}</p>
+                    <p className="form-control-static">{Meteor.user().username}</p>
                   </div>
                 </div>
                 <div className="form-group row">
                   <label className="col-md-3 form-control-label" htmlFor="text-input">Email</label>
                   <div className="col-md-9">
-                    <p className="form-control-static">{profile.emails[0].address}</p>
+                    <p className="form-control-static">{Meteor.user().emails[0].address}</p>
                   </div>
                 </div>
                 <div className="form-group row">
