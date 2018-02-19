@@ -66,7 +66,7 @@ class AdminReportSummaryEdit extends Component {
           <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
-                <i className="fa fa-pencil"> </i> Edit report summary for week {moment(report.reportsEndDate).isoWeek()}
+                <i className="fa fa-pencil"> </i> Edit report summary for week {moment(report.reportsEndDate).subtract(1, 'd').isoWeek()}
               </div>
               <div className="card-block">
                 <div className="form-group row">
