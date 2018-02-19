@@ -27,6 +27,7 @@ Meteor.methods({
       options.email = encodeURIComponent(options.email.split('@')[0]) + '@' + options.email.split('@')[1];
 
       const userId = Accounts.createUser(options);
+      if(!userId) return {error: 'Could not create account'};
       return {result: userId};
     } catch(e) {
       return {error: e.message};
