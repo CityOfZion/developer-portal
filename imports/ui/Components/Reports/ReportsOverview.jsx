@@ -51,8 +51,6 @@ class ReportsOverview extends Component {
     const {history, reports} = this.props;
     const currentWeek = moment().isoWeek();
     
-    console.log(reports);
-    
     if(!reports) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
   
     const headers = ['Week', 'Report Date', 'Updated on', 'Status', 'Reward', 'Action'];
@@ -65,7 +63,7 @@ class ReportsOverview extends Component {
           <td>{report.status}</td>
           <td>{report.rewardAmount || 'Not yet assigned'}</td>
           <td>
-            {report.week === currentWeek ? <button className="btn btn-sm btn-warning" onClick={e => history.push('/reports/edit/' + report._id)}><i className="fa fa-pencil"> </i> Edit</button> : ''}
+            {moment(report.reportedOn).isoWeek() === currentWeek ? <button className="btn btn-sm btn-warning" onClick={e => history.push('/reports/edit/' + report._id)}><i className="fa fa-pencil"> </i> Edit</button> : ''}
             <button className="btn btn-sm btn-primary" onClick={e => history.push('/reports/' + report._id)}><i
               className="fa fa-eye"> </i> View
             </button>
