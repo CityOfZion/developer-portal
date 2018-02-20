@@ -3,12 +3,18 @@ import moment from 'moment';
 import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
 import showdown from 'showdown';
 import Spinner from 'react-spinkit';
+import DOMPurify from 'dompurify';
 
 class ReportView extends Component {
   
   render() {
     const {history} = this.props;
-    const converter = new showdown.Converter();
+    const converter = new showdown.Converter({
+      simplifiedAutoLink: true,
+      excludeTrailingPunctuationFromURLs: true,
+      openLinksInNewWindow: true,
+      simpleLineBreaks: true,
+    });
     const report = this.props.reports && this.props.reports[0] ? this.props.reports[0] : false;
   
     if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
@@ -33,7 +39,7 @@ class ReportView extends Component {
               <div className="card-header">
                 Last updated: {moment(report.updatedOn).format('YYYY-MM-DD HH:mm:ss')}
               </div>
-              <div className="card-block" dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(report.content))}} />
+              <div className="card-block" dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(converter.makeHtml(report.content))}} />
               <div className="card-footer">
                 {report.status === 'reported' ?
                 <button className="btn btn-sm btn-primary" onClick={e => history.push('/reports/edit/' + this.props.match.params.id)}><i

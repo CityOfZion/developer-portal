@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import ErrorModal from "/imports/ui/Components/ErrorModal";
 import showdown from 'showdown';
 import moment from 'moment';
-import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
+import DOMPurify from 'dompurify';
 import FoldingCard from "../../Widgets/FoldingCard";
 import ContentTable from "../../Widgets/ContentTable";
 import Spinner from 'react-spinkit';
@@ -102,7 +102,12 @@ class AdminReportView extends Component {
   }
   
   reportsView(joinedReportSummary) {
-    const converter = new showdown.Converter();
+    const converter = new showdown.Converter({
+      simplifiedAutoLink: true,
+      excludeTrailingPunctuationFromURLs: true,
+      openLinksInNewWindow: true,
+      simpleLineBreaks: true,
+    });
   
     return <div className="col-lg-6">
       <div className="card">
@@ -114,7 +119,7 @@ class AdminReportView extends Component {
             <FoldingCard
               key={index}
               header={`${report.user.username} reported on ` + moment(report.reportedOn).format('YYYY-MM-DD HH:mm')}
-              content={replaceURLWithHTMLLinks(converter.makeHtml(report.content))}
+              content={DOMPurify.sanitize(converter.makeHtml(report.content))}
             />
           )}
     

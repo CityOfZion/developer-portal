@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import ErrorModal from "/imports/ui/Components/ErrorModal";
-import {replaceURLWithHTMLLinks} from '/imports/helpers/helpers';
 import showdown from 'showdown';
+import DOMPurify from 'dompurify';
 
 class ReportAdd extends Component {
   
@@ -37,7 +37,12 @@ class ReportAdd extends Component {
   
   render() {
     const {history} = this.props;
-    const converter = new showdown.Converter();
+    const converter = new showdown.Converter({
+      simplifiedAutoLink: true,
+      excludeTrailingPunctuationFromURLs: true,
+      openLinksInNewWindow: true,
+      simpleLineBreaks: true,
+    });
     return (
       <div className="animated fadeIn">
         <div className="row">
@@ -73,7 +78,7 @@ class ReportAdd extends Component {
               </div>
               <div className="card-block">
                 <div className="form-group"
-                     dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(this.state.content))}}/>
+                     dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(converter.makeHtml(this.state.content))}}/>
               </div>
             </div>
           </div>

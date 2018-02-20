@@ -3,6 +3,7 @@ import ErrorModal from "/imports/ui/Components/ErrorModal";
 import showdown from 'showdown';
 import {replaceURLWithHTMLLinks} from '/imports/helpers/helpers';
 import Spinner from 'react-spinkit';
+import DOMPurify from 'dompurify';
 
 class ReportEdit extends Component {
   
@@ -45,7 +46,13 @@ class ReportEdit extends Component {
   
   render() {
     const {history} = this.props;
-    const converter = new showdown.Converter();
+    const converter = new showdown.Converter({
+      simplifiedAutoLink: true,
+      excludeTrailingPunctuationFromURLs: true,
+      openLinksInNewWindow: true,
+      simpleLineBreaks: true,
+    });
+    
     const report = this.props.reports && this.props.reports[0] ? this.props.reports[0] : false;
     
     if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
@@ -85,7 +92,7 @@ class ReportEdit extends Component {
               </div>
               <div className="card-block">
                 <div className="form-group"
-                     dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(this.state.content))}}/>
+                     dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(converter.makeHtml(this.state.content))}}/>
               </div>
             </div>
           </div>
