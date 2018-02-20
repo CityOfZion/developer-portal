@@ -50,7 +50,12 @@ class AdminReportDistributionView extends Component {
   render() {
     const {history, reportSummaries} = this.props;
     const report = reportSummaries && reportSummaries()[0] ? reportSummaries[0] : false;
-    const converter = new showdown.Converter();
+    const converter = new showdown.Converter({
+      simplifiedAutoLink: true,
+      excludeTrailingPunctuationFromURLs: true,
+      openLinksInNewWindow: true,
+      simpleLineBreaks: true,
+    });
     
     if(!report) return <div style={{height: '80vh', display:'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner name="ball-triangle-path" /></div>;
   

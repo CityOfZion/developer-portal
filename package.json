@@ -12,6 +12,7 @@
     "bcrypt": "^1.0.3",
     "chart.js": "^2.7.1",
     "countdown": "^2.6.0",
+    "dompurify": "^1.0.3",
     "identicons-react": "^0.1.0",
     "meteor-node-stubs": "^0.3.2",
     "moment": "^2.20.1",

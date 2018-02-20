@@ -3,6 +3,7 @@ import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
 import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
 import showdown from 'showdown';
+import DOMPurify from 'dompurify';
 
 class AdminReportVoting extends Component {
   
@@ -91,7 +92,12 @@ class AdminReportVoting extends Component {
   render() {
     const {history} = this.props;
     const reports = this.props.reports && this.props.reports[0] ? this.props.reports[0] : {reports: []};
-    const converter = new showdown.Converter();
+    const converter = new showdown.Converter({
+      simplifiedAutoLink: true,
+      excludeTrailingPunctuationFromURLs: true,
+      openLinksInNewWindow: true,
+      simpleLineBreaks: true,
+    });
     return (
       <div>
         {!this.state.currentReport ? '' :
@@ -122,7 +128,7 @@ class AdminReportVoting extends Component {
                     Last updated: {moment(this.state.currentReport.updatedOn).format('YYYY-MM-DD HH:mm:ss')}
                   </div>
                   <div className="card-block"
-                       dangerouslySetInnerHTML={{__html: replaceURLWithHTMLLinks(converter.makeHtml(this.state.currentReport.content))}}/>
+                       dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(converter.makeHtml(this.state.currentReport.content))}}/>
                   <div className="card-footer">
                   
                   </div>
