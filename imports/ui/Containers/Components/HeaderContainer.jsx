@@ -7,20 +7,22 @@ export default HeaderContainer = withTracker(() => {
   const unreadAlertsHandle = Meteor.subscribe('unreadAlerts');
   const unreadTasksHandle = Meteor.subscribe('unreadTasks');
   const unreadCommentsHandle = Meteor.subscribe('unreadComments');
-  
+  const currentReportHandle = Meteor.subscribe('currentReport');
   const reportSummaryHandle = Meteor.subscribe('currentSummary');
   
   const loading = !unreadAlertsHandle.ready() ||
                   !unreadMessagesHandle.ready() ||
                   !reportSummaryHandle.ready() ||
                   !unreadCommentsHandle.ready() ||
-                  !unreadTasksHandle.ready();
+                  !unreadTasksHandle.ready() ||
+                  !currentReportHandle.ready();
   
   const unreadMessages = UserMessages.find({read: false}).fetch();
   const unreadComments = UserComments.find({read: false}).fetch();
   const unreadAlerts = UserAlerts.find({read: false}).fetch();
   const unreadTasks = UserTasks.find({read: false}).fetch();
   const reportSummary = ReportSummaries.find({}).fetch();
+  const currentReport = UserReports.find({}).fetch();
   
   return {
     loading,
@@ -28,6 +30,7 @@ export default HeaderContainer = withTracker(() => {
     unreadComments,
     unreadAlerts,
     unreadTasks,
-    reportSummary
+    reportSummary,
+    currentReport
   };
 })(Header);

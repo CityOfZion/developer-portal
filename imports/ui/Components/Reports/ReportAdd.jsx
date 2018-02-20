@@ -97,7 +97,10 @@ class ReportAdd extends Component {
           message="Your report was submitted"
           disableCancel={true}
           title="Success"
-          callback={() => this.setState({addReportSuccess: false})}/>
+          callback={() => {
+            this.setState({addReportSuccess: false});
+            history.push('/reports')}
+          }/>
       </div>
     )
   }
