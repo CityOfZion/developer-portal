@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 Meteor.publish('reports', function () {
   if (Roles.userIsInRole(Meteor.userId(), ['council', 'admin'])) {
     ReactiveAggregate(this, UserReports, [
@@ -35,6 +37,12 @@ Meteor.publish('reports', function () {
 
 Meteor.publish('userReports', function() {
   return UserReports.find({userId: Meteor.userId()});
+});
+
+Meteor.publish('currentReport', function() {
+  const thisWeekStart = moment().startOf('isoWeek').toDate();
+  const thisWeekEnd = moment().endOf('isoWeek').toDate();
+  return UserReports.find({userId: Meteor.userId(), reportedOn: {$lte: thisWeekEnd, $gte: thisWeekStart}});
 });
 
 Meteor.publish('reportById', function (id) {

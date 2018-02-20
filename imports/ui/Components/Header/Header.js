@@ -19,14 +19,6 @@ class Header extends Component {
     };
   }
   
-  unreadMessages() {
-    return Messages.find({messages: {$elemMatch: {read: false}}}).fetch();
-  }
-  
-  unreadAlertsCount() {
-    return UserAlerts.find({read: false}).fetch();
-  }
-  
   toggle() {
     this.setState({
       dropdownOpen: !this.state.dropdownOpen
@@ -94,7 +86,10 @@ class Header extends Component {
       const endDate = moment(reportSummary.reportsEndDate);
       const diff = endDate - now;
       const remaining = moment.duration(diff, 'milliseconds');
-      string = <Link className="btn btn-danger mr-2" to="/reports/add">Report submission ends in: {remaining.days()} days {remaining.hours()} hours {remaining.minutes()} mins {remaining.seconds()} sec</Link>;
+      console.log(this.props.currentReport);
+      const linkClass = (this.props.currentReport && this.props.currentReport[0]) ? '' : 'btn btn-danger mr-2';
+      const linkTo = (this.props.currentReport && this.props.currentReport[0]) ? `/reports/edit/${this.props.currentReport[0]._id}` : '/reports/add';
+      string = <Link className={linkClass} to={linkTo}>Report submission ends in: {remaining.days()} days {remaining.hours()} hours {remaining.minutes()} mins</Link>;
     } else {
       if(reportSummary.votingOpen) {
         if (!reportSummary.votingCloseDate) {
@@ -104,7 +99,7 @@ class Header extends Component {
           const diff = endDate - now;
           const timeRemaining = moment.duration(diff, 'milliseconds');
           string = <Link className="btn btn-danger mr-2" to="/admin/reports">Voting ends
-            in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins {timeRemaining.seconds()} sec</Link>;
+            in: {timeRemaining.days()} days {timeRemaining.hours()} hours {timeRemaining.minutes()} mins</Link>;
         }
       }
     }
@@ -185,7 +180,5 @@ class Header extends Component {
 Header.propTypes = {
   history: PropTypes.object.isRequired
 };
-
-ReactMixin(Header.prototype, TrackerReactMixin);
 
 export default Header;
