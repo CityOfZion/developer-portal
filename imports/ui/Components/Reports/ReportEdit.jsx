@@ -4,6 +4,7 @@ import showdown from 'showdown';
 import {replaceURLWithHTMLLinks} from '/imports/helpers/helpers';
 import Spinner from 'react-spinkit';
 import DOMPurify from 'dompurify';
+import moment from "moment/moment";
 
 class ReportEdit extends Component {
   
@@ -63,7 +64,7 @@ class ReportEdit extends Component {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
-                <i className="fa fa-pencil"> </i> Edit report for week {report.week}
+                <i className="fa fa-pencil"> </i> Edit report for week {moment(report.reportedOn).isoWeek()}
               </div>
               <div className="card-block">
                 <form action="" method="post">
