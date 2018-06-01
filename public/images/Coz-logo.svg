@@ -1,26 +1,32 @@
 <svg width="54" height="54" xmlns="http://www.w3.org/2000/svg">
- <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
- <title>Coz-logo</title>
- <desc>Created with Sketch.</desc>
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>Coz-logo</title>
+    <desc>Created with Sketch.</desc>
 
- <g>
-  <title>background</title>
-  <rect fill="none" id="canvas_background" height="56" width="56" y="-1" x="-1"/>
- </g>
- <g>
-  <title>Layer 1</title>
-  <g fill-rule="evenodd" fill="none" id="Page-1">
-   <g fill="#FFFFFF" id="CoZ_CompetitionPage_Registration_S4">
-    <g id="Coz-logo">
-     <g id="CoZ_Logo">
-      <g id="Icon">
-       <polygon points="52.7520751953125,36.64285659790039 46.31427001953125,43.07143020629883 33.43798828125,43.07143020629883 46.31427001953125,30.21428680419922 " id="Fill-22"/>
-       <polygon points="39.87603759765625,23.872352600097656 33.9578857421875,17.530418395996094 39.87603759765625,11.1878662109375 33.43829345703125,4.8459320068359375 27,11.1878662109375 20.912841796875,4.5 14.12396240234375,11.1878662109375 33.43829345703125,30.21428680419922 " id="Fill-24"/>
-       <polygon points="7.685791015625,17.35714340209961 27,36.64273452758789 14.1236572265625,49.5 1.2479248046875,49.5 14.1236572265625,36.64273452758789 1.2479248046875,23.785465240478516 " id="Fill-26"/>
-      </g>
-     </g>
+    <g>
+        <title>background</title>
+        <rect fill="none" id="canvas_background" height="56" width="56" y="-1" x="-1"/>
     </g>
-   </g>
-  </g>
- </g>
+    <g>
+        <title>Layer 1</title>
+        <g fill-rule="evenodd" fill="none" id="Page-1">
+            <g fill="#FFFFFF" id="CoZ_CompetitionPage_Registration_S4">
+                <g id="Coz-logo">
+                    <g id="CoZ_Logo">
+                        <g id="Icon">
+                            <polygon
+                                    points="52.7520751953125,36.64285659790039 46.31427001953125,43.07143020629883 33.43798828125,43.07143020629883 46.31427001953125,30.21428680419922 "
+                                    id="Fill-22"/>
+                            <polygon
+                                    points="39.87603759765625,23.872352600097656 33.9578857421875,17.530418395996094 39.87603759765625,11.1878662109375 33.43829345703125,4.8459320068359375 27,11.1878662109375 20.912841796875,4.5 14.12396240234375,11.1878662109375 33.43829345703125,30.21428680419922 "
+                                    id="Fill-24"/>
+                            <polygon
+                                    points="7.685791015625,17.35714340209961 27,36.64273452758789 14.1236572265625,49.5 1.2479248046875,49.5 14.1236572265625,36.64273452758789 1.2479248046875,23.785465240478516 "
+                                    id="Fill-26"/>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>
