@@ -1,7 +1,12 @@
 Meteor.publish('comments', () => {
-  return UserComments.find({toUserId: Meteor.userId()});
+    return UserComments.find({
+        toUserId: Meteor.userId()
+    });
 });
 
 Meteor.publish('unreadComments', () => {
-  return UserComments.find({toUserId: Meteor.userId(), read: false});
+    return UserComments.find({
+        toUserId: Meteor.userId(),
+        read: false
+    });
 });

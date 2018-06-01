@@ -1,25 +1,34 @@
 const routePermissions = {
-  developer: [
-    'chats',
-    'reports',
-    'dashboard',
-    'profile',
-    'third-party'
-  ],
-  council: [
-    'chats',
-    'council',
-    'dashboard',
-    'profile',
-    'third-party'
-  ],
-  admin: [
-    'chats',
-    'admin',
-    'dashboard',
-    'profile',
-    'third-party'
-  ]
+    developer: [
+        'reports',
+        'dashboard',
+        'profile',
+        'report-summaries'
+    ],
+    maintainer: [
+        'reports',
+        'dashboard',
+        'profile',
+        'report-summaries'
+    ],
+    contributor: [
+        'reports',
+        'dashboard',
+        'profile',
+        'report-summaries'
+    ],
+    council: [
+        'council',
+        'dashboard',
+        'profile',
+        'report-summaries'
+    ],
+    admin: [
+        'admin',
+        'dashboard',
+        'profile',
+        'report-summaries'
+    ]
 };
 
 export default routePermissions;
