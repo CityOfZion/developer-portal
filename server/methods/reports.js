@@ -89,18 +89,35 @@ Meteor.methods({
             }
 
             const reportSummary = ReportSummaries.findOne({_id: summaryId});
-            const hasVoted = reportSummary.votes.some(vote => vote.userId === Meteor.userId());
+            const hasVoted = reportSummary.votes.some(vote => vote.userId === Meteor.userId() && targetUserId === vote.reportUserId);
+
+            console.log('------------------------');
+            console.log('hasVoted: ', hasVoted);
+            console.log('------------------------');
 
             let result = null;
 
             // If user has voted already, update vote instead
             if (hasVoted) {
+
                 result = ReportSummaries.update({
                     _id: reportSummary._id,
-                    'votes.userId': Meteor.userId()
-                }, {$set: {'votes.$.vote': vote}});
+                    votes: {
+                        $elemMatch: {
+                            userId: {$eq: Meteor.userId()},
+                            reportUserId: {$eq: targetUserId}
+                        }
+                    }
+                }, {
+                    $set: {
+                        'votes.$.vote': vote
+                    }
+                });
+
             } else {
-                result = ReportSummaries.update({_id: reportSummary._id}, {
+                result = ReportSummaries.update({
+                    _id: reportSummary._id
+                }, {
                     $push: {
                         votes: {
                             userId: Meteor.userId(),

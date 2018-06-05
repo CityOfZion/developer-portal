@@ -34,11 +34,7 @@ Meteor.publish('reportSummaryByIdAndType', function (id, type) {
             votingOpen: 1,
             votingCompleted: 1,
             distributionCompleted: 1,
-            reports: {
-                $elemMatch: {
-                    "user.type": type
-                }
-            }
+            reports: 1
         }
     });
 });

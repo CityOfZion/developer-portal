@@ -10,7 +10,8 @@ Jobs.register({
                 votingOpen: false,
                 votingCompleted: true,
                 "reports.$.status": "under review"
-            }
+            },
+            multi: true
         });
         console.log('closeVotingResult', result);
         if (result) this.success(result);

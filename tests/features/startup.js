@@ -1,7 +1,15 @@
 import moment from "moment/moment";
+import user from './user-fixtures';
 
 module.exports = function () {
+
+    this.Before(function() {
+        console.log('beforeAll')
+    })
+
     this.BeforeFeatures(function (scenario) {
+        user.setServer(server);
+
         server.call('logout');
 
         const result = server.execute(function () {

@@ -62,7 +62,7 @@ class AdminReportsOverview extends Component {
         const voteLabel = summary.votingCloseDate ? `Vote (ends in ${timeRemaining.days()}D ${timeRemaining.hours()}H ${timeRemaining.minutes()}M ${timeRemaining.seconds()}S)` : 'Vote';
 
         return this.voteButtonEnabled(summary) ?
-            <button className="btn btn-sm btn-warning"
+            <button className="btn btn-sm btn-warning vote"
                     onClick={e => this.props.history.push('/council/reports/vote/' + summary._id)}><i
                 className="fa fa-hand-paper-o"> </i> {voteLabel}</button> :
             '';

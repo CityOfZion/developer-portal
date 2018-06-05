@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import moment from 'moment';
-import {replaceURLWithHTMLLinks} from "/imports/helpers/helpers";
 import showdown from 'showdown';
 import DOMPurify from 'dompurify';
 import Spinner from 'react-spinkit';
+import VoteButtons from "../../Subcomponents/VoteButtons";
+import PropTypes from 'prop-types';
+import VoteUserList from "../../Subcomponents/VoteUserList";
 
 class AdminReportVoting extends Component {
 
@@ -13,13 +15,14 @@ class AdminReportVoting extends Component {
         this.state = {
             initialized: false,
             currentReportIndex: 0,
-            currentReport: false
+            currentReport: false,
+            reportSummary: false
         }
     }
 
     currentReport(props = false) {
         try {
-            const {reportSummary} = props || this.props;
+            const {reportSummary} = props || this.state;
             return reportSummary.reports[this.state.currentReportIndex];
         } catch (e) {
             return false;
@@ -31,7 +34,8 @@ class AdminReportVoting extends Component {
         if (!this.state.initialized && report) {
             this.setState({
                 currentReport: report,
-                initialized: true
+                initialized: true,
+                reportSummary: props.reportSummary
             });
         }
     }
@@ -41,7 +45,14 @@ class AdminReportVoting extends Component {
     }
 
     vote(amount) {
+        console.log('VOTING', this.state.currentReport);
+        console.log('AMOUNT', amount);
+        console.log('ID', this.props.match.params.id);
+
         Meteor.call('addVoteToReport', this.props.match.params.id, this.state.currentReport.user.id, amount, (err, res) => {
+
+            console.log('addVoteToReport', err, res);
+
             this.setState({
                 initialized: false
             });
@@ -51,31 +62,15 @@ class AdminReportVoting extends Component {
         })
     }
 
-    getVote(votes) {
-        try {
-            for (let i = 0; i < votes.length; i++) {
-                if (votes[i].userId === Meteor.userId()) return votes[i].vote;
-            }
-            return votes;
-        } catch (e) {
-            return 0;
-        }
-    }
-
     voteButtons(votes) {
         try {
-            const start = 1;
-            const end = 10;
-
             const userVotes = votes.filter(vote => {
                 if (vote.reportUserId === this.state.currentReport.user.id) {
                     return vote;
                 }
             });
 
-            const buttons = [];
-
-            let voted = 0;
+            let voted = false;
             userVotes.some((vote) => {
                 if (vote.userId === Meteor.userId()) {
                     voted = vote.vote;
@@ -83,53 +78,17 @@ class AdminReportVoting extends Component {
                 }
             });
 
-            for (let i = start; i <= end; i++) {
-                if (voted > 0 && voted === i) {
-                    buttons.push(<button key={`vote-${i}`} className="btn btn-block btn-sm btn-success"><i
-                        className="fa fa-check-square"> </i> {i}
-                    </button>);
-                } else {
-                    buttons.push(<button key={`vote-${i}`} onClick={e => this.vote(i)}
-                                         className="btn btn-block btn-sm btn-primary">
-                        <i
-                            className="fa fa-square-o"> </i> {i}
-                    </button>);
-                }
-            }
-
-            return buttons;
+            return <VoteButtons selectedVote={voted} voteCallback={vote => {this.vote(vote);}}/>
         } catch (e) {
             return <div></div>
         }
     }
 
-    userReports(reports) {
-        const buttons = [];
-        reports.map((rep, index) => {
-            const voted = this.getVote(this.props.reportSummary.votes);
-            if (voted > 0) {
-                buttons.push(<button key={`select-${index}`} onClick={e => this.setState({
-                    currentReportIndex: index,
-                    currentReport: reports[index]
-                })} className="btn btn-block btn-sm btn-success"><i
-                    className="fa fa-check-square"> </i> {rep.user.username}
-                </button>);
-            } else {
-                buttons.push(<button key={`select-${index}`} onClick={e => this.setState({
-                    currentReportIndex: index,
-                    currentReport: reports[index]
-                })} className="btn btn-block btn-sm btn-primary">
-                    <i
-                        className="fa fa-square-o"> </i> {rep.user.username}
-                </button>);
-            }
-        });
-
-        return buttons;
-    }
-
     render() {
-        const {history, reportSummary} = this.props;
+        const {reportSummary} = this.props;
+
+        console.log(reportSummary);
+
         if (!reportSummary) return <div
             style={{height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner
             name="ball-triangle-path"/></div>;
@@ -148,7 +107,10 @@ class AdminReportVoting extends Component {
                                         <i className="fa fa-align-justify"></i> Report from user
                                     </div>
                                     <div className="card-block">
-                                        {this.userReports(reportSummary.reports)}
+                                        <VoteUserList
+                                            reports={reportSummary.reports}
+                                            votes={reportSummary.votes}
+                                            selectCallback={index => this.setState({currentReportIndex: index, currentReport: reportSummary.reports[index]})}/>
                                     </div>
                                 </div>
                             </div>
@@ -193,5 +155,9 @@ class AdminReportVoting extends Component {
         )
     }
 }
+
+AdminReportVoting.PropTypes = {
+    reportSummary: PropTypes.object.isRequired
+};
 
 export default AdminReportVoting;

@@ -52,9 +52,9 @@ class AdminReportView extends Component {
     reportsWidthButtons = () => {
         return this.allowedReportsWidthValues.map(width => {
             return (width === this.state.reportsWidth) ?
-                <button type="button" className="btn btn-success"
+                <button type="button" key={width} className="btn btn-success"
                         onClick={e => this.changeReportsWidth(width)}>{width}</button> :
-                <button type="button" className="btn btn-secondary"
+                <button type="button" key={width} className="btn btn-secondary"
                         onClick={e => this.changeReportsWidth(width)}>{width}</button>
         });
     };
