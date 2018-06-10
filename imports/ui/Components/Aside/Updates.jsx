@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
 
 class Updates extends Component {
     render() {
@@ -30,5 +31,10 @@ class Updates extends Component {
         </div>
     }
 }
+
+Updates.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    updates: PropTypes.array.isRequired
+};
 
 export default Updates;

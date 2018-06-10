@@ -15,20 +15,20 @@ class VoteUserList extends Component {
     }
 
     render() {
-        const {reports, selectCallback, votes} = this.props;
+        const {reports, selectCallback, votes, currentSelectedIndex} = this.props;
 
         console.log('votes', votes);
 
         const buttons = [];
         reports.map((rep, index) => {
+            const active = currentSelectedIndex === index;
             if (this.getVote(rep.user.id, votes) > 0) {
-                buttons.push(<button key={`select-${index}`} onClick={e => selectCallback(index)} className="btn btn-block btn-sm btn-success"><i
-                    className="fa fa-check-square"> </i> {rep.user.username}
+                buttons.push(<button key={`select-${index}`} onClick={e => selectCallback(index)} className={`btn btn-block btn-sm ${active ? 'btn-outline-success' : 'btn-success'}`}>
+                    <i className="fa fa-check-square"> </i> {rep.user.username}
                 </button>);
             } else {
-                buttons.push(<button key={`select-${index}`} onClick={e => selectCallback(index)} className="btn btn-block btn-sm btn-primary">
-                    <i
-                        className="fa fa-square-o"> </i> {rep.user.username}
+                buttons.push(<button key={`select-${index}`} onClick={e => selectCallback(index)} className={`btn btn-block btn-sm ${active ? 'btn-outline-warning' : 'btn-warning'}`}>
+                    <i className="fa fa-square-o"> </i> {rep.user.username}
                 </button>);
             }
         });
@@ -40,7 +40,8 @@ class VoteUserList extends Component {
 VoteUserList.propTypes = {
     reports: PropTypes.array.isRequired,
     votes: PropTypes.array.isRequired,
-    selectCallback: PropTypes.func.isRequired
+    selectCallback: PropTypes.func.isRequired,
+    currentSelectedIndex: PropTypes.number.isRequired
 };
 
 

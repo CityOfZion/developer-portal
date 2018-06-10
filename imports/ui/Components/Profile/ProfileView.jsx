@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 class ProfileView extends Component {
 
@@ -66,5 +67,10 @@ class ProfileView extends Component {
         )
     }
 }
+
+ProfileView.propTypes = {
+    history: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired
+};
 
 export default ProfileView;

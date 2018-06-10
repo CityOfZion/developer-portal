@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
 
 class Tasks extends Component {
     render() {
@@ -22,5 +23,10 @@ class Tasks extends Component {
         </div>
     }
 }
+
+Tasks.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    tasks: PropTypes.array.isRequired
+};
 
 export default Tasks;

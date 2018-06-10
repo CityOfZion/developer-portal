@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ContentTable from "../Widgets/ContentTable";
+import PropTypes from 'prop-types';
 
 class UsersOverview extends Component {
 
@@ -81,5 +82,10 @@ class UsersOverview extends Component {
         )
     }
 }
+
+UsersOverview.propTypes = {
+    history: PropTypes.object.isRequired,
+    users: PropTypes.array.isRequired
+};
 
 export default UsersOverview;

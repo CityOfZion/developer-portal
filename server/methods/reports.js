@@ -95,7 +95,7 @@ Meteor.methods({
             console.log('hasVoted: ', hasVoted);
             console.log('------------------------');
 
-            let result = null;
+            let result = {};
 
             // If user has voted already, update vote instead
             if (hasVoted) {
@@ -113,6 +113,7 @@ Meteor.methods({
                         'votes.$.vote': vote
                     }
                 });
+                console.log('hasVoted')
 
             } else {
                 result = ReportSummaries.update({
@@ -126,22 +127,28 @@ Meteor.methods({
                         }
                     }
                 });
+                console.log('hasVotedElse')
             }
 
-            // closing date isn't set yet
-            if (!reportSummary.votingCloseDate) {
-                const totalReportsVoted = reportSummary.votes.filter(vote => vote.userId === Meteor.userId()).length;
-                const totalReports = reportSummary.reports.filter(report => report.user.type === "developer").length;
+            const totalReportsVoted = reportSummary.votes.filter(vote => vote.userId === Meteor.userId()).length;
+            const totalReports = reportSummary.reports.filter(report => report.user.type === "developer").length;
 
-                // If true then start countdown for others to vote
-                if (totalReports === totalReportsVoted) {
-                    const closingDate = moment(moment().add(1, 'hour'));
+            console.log('addVoteToReport', totalReportsVoted, totalReports);
+
+            if (totalReports === totalReportsVoted) {
+                result = {finalVote: 1};
+                console.log('totalReports === totalReportsVoted')
+                // closing date isn't set yet
+                if (!reportSummary.votingCloseDate) {
+
+                    // If true then start countdown for others to vote
+                    const closingDate = moment(moment().add(5, 'days'));
                     console.log('Setting the closing date to: ', closingDate.toISOString());
                     ReportSummaries.update({_id: reportSummary._id}, {$set: {votingCloseDate: closingDate.toDate()}});
 
                     Jobs.run("closeVoting", reportSummary._id, {
                         in: {
-                            hours: 1,
+                            days: 5,
                         },
                         on: {
                             hour: closingDate.hour(),
@@ -150,8 +157,11 @@ Meteor.methods({
                         },
                         priority: 9999999999
                     });
+
                 }
             }
+
+            console.log('result', result);
 
             return {result};
         } catch (e) {

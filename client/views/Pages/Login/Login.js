@@ -35,6 +35,7 @@ class Login extends Component {
     render() {
         // check if user is actually logged in
         if (this.props.currentUser) return <Redirect to="/dashboard"/>;
+        const {currentUser} = this.props;
 
         return (
             <div className="app flex-row align-items-center">
@@ -45,7 +46,7 @@ class Login extends Component {
                                 <div className="card p-4 login">
                                     <div className="card-block">
                                         <h1>Login</h1>
-                                        {Meteor.user() && Meteor.user().emails[0].verified === false ? 'You are currently logged in, but your email address has not been verified. Please check your email and verify your email address' :
+                                        {currentUser && currentUser.emails[0].verified === false ? 'You are currently logged in, but your email address has not been verified. Please check your email and verify your email address' :
                                             <div>
                                                 <p className="text-muted">Sign In to your account</p>
                                                 <div className="input-group mb-3">
@@ -115,5 +116,10 @@ class Login extends Component {
         );
     }
 }
+
+Login.propTypes = {
+    history: PropTypes.object.isRequired,
+    currentUser: PropTypes.object
+};
 
 export default Login;

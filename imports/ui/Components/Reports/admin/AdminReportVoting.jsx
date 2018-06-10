@@ -20,10 +20,10 @@ class AdminReportVoting extends Component {
         }
     }
 
-    currentReport(props = false) {
+    currentReport(props = false, next = false) {
         try {
             const {reportSummary} = props || this.state;
-            return reportSummary.reports[this.state.currentReportIndex];
+            return next ? reportSummary.reports[this.state.currentReportIndex + 1] : reportSummary.reports[this.state.currentReportIndex];
         } catch (e) {
             return false;
         }
@@ -45,20 +45,20 @@ class AdminReportVoting extends Component {
     }
 
     vote(amount) {
-        console.log('VOTING', this.state.currentReport);
-        console.log('AMOUNT', amount);
-        console.log('ID', this.props.match.params.id);
 
         Meteor.call('addVoteToReport', this.props.match.params.id, this.state.currentReport.user.id, amount, (err, res) => {
 
-            console.log('addVoteToReport', err, res);
+            console.log('VOTE', res);
 
-            this.setState({
-                initialized: false
-            });
-            const report = this.currentReport();
-
-            this.setState({currentReport: report, initialized: false})
+            if(res.result.finalVote) {
+                this.props.history.push(`/council/reports/view/${this.props.match.params.id}`);
+            } else {
+                const report = res.result ? this.currentReport(false, true) : this.currentReport();
+                const numberOfReports = this.state.reportSummary.reports.length;
+                const shouldUpdateIndex = numberOfReports > this.state.currentReportIndex + 1;
+                const currentReportIndex = res.result && shouldUpdateIndex ?  this.state.currentReportIndex + 1 : this.state.currentReportIndex;
+                this.setState({currentReport: report, initialized: false, currentReportIndex: currentReportIndex});
+            }
         })
     }
 
@@ -110,6 +110,7 @@ class AdminReportVoting extends Component {
                                         <VoteUserList
                                             reports={reportSummary.reports}
                                             votes={reportSummary.votes}
+                                            currentSelectedIndex={this.state.currentReportIndex}
                                             selectCallback={index => this.setState({currentReportIndex: index, currentReport: reportSummary.reports[index]})}/>
                                     </div>
                                 </div>
@@ -155,9 +156,5 @@ class AdminReportVoting extends Component {
         )
     }
 }
-
-AdminReportVoting.PropTypes = {
-    reportSummary: PropTypes.object.isRequired
-};
 
 export default AdminReportVoting;

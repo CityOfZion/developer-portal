@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ErrorModal from "/imports/ui/Components/ErrorModal";
 import moment from 'moment';
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
 
 class AdminReportSummaryEdit extends Component {
 
@@ -46,7 +47,7 @@ class AdminReportSummaryEdit extends Component {
                     if (res.error) {
                         this.setState({editReportSummaryError: true, editReportSummaryErrorMessage: res.error});
                     } else {
-                        this.setState({editReportSummarySuccess: true});
+                        this.props.history.push(`/council/reports/view/${this.props.match.params.id}`);
                     }
                 }
             })
@@ -145,5 +146,10 @@ class AdminReportSummaryEdit extends Component {
         )
     }
 }
+
+AdminReportSummaryEdit.propTypes = {
+    history: PropTypes.object.isRequired,
+    reportSummaries: PropTypes.array.isRequired
+};
 
 export default AdminReportSummaryEdit;

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
 
 class Comments extends Component {
     render() {
@@ -30,5 +31,10 @@ class Comments extends Component {
         </div>
     }
 }
+
+Comments.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    comments: PropTypes.array.isRequired
+};
 
 export default Comments;

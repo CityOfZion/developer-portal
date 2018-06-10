@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ErrorModal from "/imports/ui/Components/ErrorModal";
-import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
 
 class ProfileEdit extends Component {
 
@@ -38,7 +38,7 @@ class ProfileEdit extends Component {
                 if (res.error) {
                     this.setState({editProfileError: true, editProfileErrorMessage: res.error});
                 } else {
-                    this.setState({editReportSuccess: true});
+                    this.props.history.push('/profile')
                 }
             }
         })
@@ -160,5 +160,9 @@ class ProfileEdit extends Component {
         )
     }
 }
+
+ProfileEdit.propTypes = {
+    history: PropTypes.object.isRequired
+};
 
 export default ProfileEdit;

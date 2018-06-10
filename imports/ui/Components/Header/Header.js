@@ -184,7 +184,10 @@ class Header extends Component {
 }
 
 Header.propTypes = {
-    history: PropTypes.object.isRequired
+    history: PropTypes.object.isRequired,
+    unreadAlerts: PropTypes.array.isRequired,
+    unreadComments: PropTypes.array.isRequired,
+    unreadTasks: PropTypes.array.isRequired
 };
 
 export default Header;

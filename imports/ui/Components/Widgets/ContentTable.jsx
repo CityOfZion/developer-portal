@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 class ContentTable extends Component {
 
@@ -26,7 +27,7 @@ class ContentTable extends Component {
     }
 
     render() {
-        const {history, headers, items, pages, currentPage, changePageCallback} = this.props;
+        const {headers, items, pages, currentPage, changePageCallback} = this.props;
 
         return (
             <div>
@@ -47,5 +48,13 @@ class ContentTable extends Component {
         )
     }
 }
+
+ContentTable.propTypes = {
+    headers: PropTypes.array.isRequired,
+    items: PropTypes.array.isRequired,
+    pages: PropTypes.number.isRequired,
+    currentPage: PropTypes.number.isRequired,
+    changePageCallback: PropTypes.func
+};
 
 export default ContentTable;

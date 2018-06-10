@@ -26,10 +26,10 @@ ErrorModal.PropTypes = {
     title: PropTypes.string.isRequired,
     opened: PropTypes.bool.isRequired,
     callback: PropTypes.func.isRequired,
-    disableConfirm: PropTypes.bool.isOptional,
-    disableCancel: PropTypes.bool.isOptional,
-    confirmText: PropTypes.string.isOptional,
-    cancelText: PropTypes.string.isOptional,
+    disableConfirm: PropTypes.bool,
+    disableCancel: PropTypes.bool,
+    confirmText: PropTypes.string,
+    cancelText: PropTypes.string,
     type: PropTypes.string
 };
 

@@ -4,8 +4,9 @@ import showdown from 'showdown';
 import moment from 'moment';
 import DOMPurify from 'dompurify';
 import FoldingCard from "../../Widgets/FoldingCard";
-import ContentTable from "../../Widgets/ContentTable";
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
+import AdminReportDistributionView from "./AdminReportDistributionView";
 
 class AdminReportView extends Component {
 
@@ -14,50 +15,10 @@ class AdminReportView extends Component {
         this.state = {
             initialized: false,
             totalReward: 0,
-            totalVotes: 0,
             summaryId: '',
             reportsWidth: 12
         };
-
-        this.allowedReportsWidthValues = [6, 7, 8, 9, 10, 11, 12];
     }
-
-    getVoteAverage = votes => {
-        return this.getVoteTotals(votes) / votes.length;
-    };
-
-    getVoteTotals = votes => {
-        return votes.reduce((a, b) => {
-            return a + b.vote;
-        }, 0)
-    };
-
-    componentWillReceiveProps(props) {
-        try {
-            const totals = props.reportSummary.votes.reduce((a, b) => {
-                return a.vote + b.vote;
-            });
-            this.setState({totalVotes: totals})
-        } catch (e) {
-            console.log(e.message);
-        }
-    }
-
-    changeReportsWidth = target => {
-        if (this.allowedReportsWidthValues.includes(target)) {
-            this.setState({reportsWidth: target})
-        }
-    };
-
-    reportsWidthButtons = () => {
-        return this.allowedReportsWidthValues.map(width => {
-            return (width === this.state.reportsWidth) ?
-                <button type="button" key={width} className="btn btn-success"
-                        onClick={e => this.changeReportsWidth(width)}>{width}</button> :
-                <button type="button" key={width} className="btn btn-secondary"
-                        onClick={e => this.changeReportsWidth(width)}>{width}</button>
-        });
-    };
 
     overview = reportSummary => {
         return <div className="col-lg-3">
@@ -123,7 +84,6 @@ class AdminReportView extends Component {
             <div className="card">
                 <div className="card-header">
                     <i className="fa fa-files-o"> </i> Reports
-                    <span className="pull-right">{this.reportsWidthButtons()}</span>
                 </div>
                 <div className="card-block">
                     {reports.map((report, index) =>
@@ -139,40 +99,6 @@ class AdminReportView extends Component {
         </div>
     };
 
-    distributionView = reportSummary => {
-
-        const headers = ['Username', 'Vote avg', 'Vote %', 'Reward', 'address'];
-        const items = reportSummary.reports.map((report, index) => {
-            const userVotes = reportSummary.votes.filter(vote => vote.reportUserId === report.user.id);
-            const voteAverage = this.getVoteAverage(userVotes);
-            const votePercentage = this.getVoteTotals(userVotes) / this.state.totalVotes * 100;
-            const neoRewarded = Math.ceil(reportSummary.totalReward * votePercentage / 100);
-            return <tr key={index}>
-                <td>{report.user.username}</td>
-                <td>{isNaN(voteAverage) ? '-' : voteAverage.toFixed(2)}</td>
-                <td>{isNaN(votePercentage) ? '-' : votePercentage.toFixed(2) + '%'}</td>
-                <td>{isNaN(neoRewarded) ? '-' : neoRewarded}</td>
-                <td>{report.user.mainWalletAddress ? report.user.mainWalletAddress : 'No address specified'}</td>
-            </tr>
-        });
-
-        return <div className="col-lg-9">
-            <div className="card">
-                <div className="card-header">
-                    <i className="fa fa-money"></i> Distribution
-                </div>
-
-                <div className="card-block">
-                    <ContentTable
-                        headers={headers}
-                        items={items}
-                        pages={1}
-                        currentPage={1}
-                    />
-                </div>
-            </div>
-        </div>
-    };
 
     render() {
         const {history, reportSummary} = this.props;
@@ -180,11 +106,12 @@ class AdminReportView extends Component {
         if (!reportSummary) return <div
             style={{height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner
             name="ball-triangle-path"/></div>;
+
         return (
             <div className="animated fadeIn">
                 <div className="row">
                     {reportSummary ? this.overview(reportSummary) : ''}
-                    {reportSummary ? this.distributionView(reportSummary) : ''}
+                    {reportSummary ? <AdminReportDistributionView history={history} reportSummary={reportSummary}/> : ''}
                     {reportSummary ? this.reportsView(reportSummary.reports) : ''}
                 </div>
                 <ErrorModal
@@ -205,5 +132,10 @@ class AdminReportView extends Component {
         )
     }
 }
+
+AdminReportView.propTypes = {
+    history: PropTypes.object.isRequired,
+    reportSummary: PropTypes.object
+};
 
 export default AdminReportView;

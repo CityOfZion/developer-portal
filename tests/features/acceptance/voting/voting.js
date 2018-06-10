@@ -3,7 +3,7 @@ import faker from 'faker';
 import user from '../../user-fixtures';
 
 module.exports = function () {
-    this.Then(/^there are (.*) reports$/, function (numberOfReports) {
+    this.Then(/^there are \d+ reports made \d+ days ago$/, function (numberOfReports, days) {
         const reports = [];
 
         console.log('Checking ' + numberOfReports + ' reports');
@@ -14,7 +14,7 @@ module.exports = function () {
 
             reports.push({
                 "content" : faker.lorem.sentence(),
-                "reportedOn" : moment(moment().subtract(7, 'days')).toDate(),
+                "reportedOn" : moment(moment().subtract(days, 'days')).toDate(),
                 "user" : {
                     "id" : addedUser._id,
                     "username" : addedUser.username,

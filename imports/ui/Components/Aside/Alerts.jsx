@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
 
 class Alerts extends Component {
 
@@ -41,5 +42,10 @@ class Alerts extends Component {
         </div>
     }
 }
+
+Alerts.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    alerts: PropTypes.array.isRequired
+};
 
 export default Alerts;

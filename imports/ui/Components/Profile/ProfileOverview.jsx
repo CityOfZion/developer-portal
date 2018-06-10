@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
+import PropTypes from 'prop-types';
 
 class ProfileOverview extends Component {
 
@@ -63,5 +64,9 @@ class ProfileOverview extends Component {
         )
     }
 }
+
+ProfileOverview.propTypes = {
+    history: PropTypes.object.isRequired
+};
 
 export default ProfileOverview;
