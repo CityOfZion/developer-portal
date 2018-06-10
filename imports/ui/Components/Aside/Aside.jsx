@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {TabContent, TabPane, Nav, NavItem, NavLink, Progress} from 'reactstrap';
 import classnames from 'classnames';
-import ReactMixin from 'react-mixin';
-import {TrackerReactMixin} from 'meteor/ultimatejs:tracker-react';
 import Alerts from "/imports/ui/Containers/Components/Aside/AlertsContainer";
 import Tasks from "/imports/ui/Containers/Components/Aside/TasksContainer";
 import Comments from "/imports/ui/Containers/Components/Aside/CommentsContainer";
@@ -82,7 +80,5 @@ class Aside extends Component {
         )
     }
 }
-
-ReactMixin(Aside.prototype, TrackerReactMixin);
 
 export default Aside;

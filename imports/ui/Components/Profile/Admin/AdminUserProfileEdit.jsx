@@ -39,7 +39,7 @@ class AdminUserProfileEdit extends Component {
         this.componentWillReceiveProps(this.props);
     }
 
-    roleOptions() {
+    static roleOptions() {
         return roles.map((role, index) => {
             return <option value={role} key={index}>{role}</option>;
         });

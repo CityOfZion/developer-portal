@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 class FoldingCard extends Component {
 
@@ -29,5 +30,10 @@ class FoldingCard extends Component {
         )
     }
 }
+
+FoldingCard.propTypes = {
+    header: PropTypes.any.isRequired,
+    content: PropTypes.string.isRequired
+};
 
 export default FoldingCard;

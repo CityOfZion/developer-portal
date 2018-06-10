@@ -5,6 +5,7 @@ import showdown from 'showdown';
 import Spinner from 'react-spinkit';
 import DOMPurify from 'dompurify';
 import moment from "moment/moment";
+import PropTypes from 'prop-types';
 
 class ReportEdit extends Component {
 
@@ -38,7 +39,7 @@ class ReportEdit extends Component {
                     if (res.error) {
                         this.setState({editReportError: true, editReportErrorMessage: res.error});
                     } else {
-                        this.setState({editReportSuccess: true});
+                        this.props.history.push(`/reports/view/${this.props.match.params.id}`)
                     }
                 }
             })
@@ -117,5 +118,10 @@ class ReportEdit extends Component {
         )
     }
 }
+
+ReportEdit.propTypes= {
+    history: PropTypes.object.isRequired,
+    reportSummary: PropTypes.object.isRequired
+};
 
 export default ReportEdit;

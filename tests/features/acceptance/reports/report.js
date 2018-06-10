@@ -1,5 +1,5 @@
 module.exports = function () {
-    this.Then(/a report has been added/, function () {
+    this.Then(/^a report has been added$/, function () {
 
         browser.pause(1000);
 
@@ -26,7 +26,7 @@ module.exports = function () {
         expect(reportCount).toEqual(1);
     });
 
-    this.Then(/a report has been edited/, function () {
+    this.Then(/^a report has been edited$/, function () {
 
         browser.pause(1000);
 

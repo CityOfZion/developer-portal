@@ -8,8 +8,7 @@ Jobs.register({
         }, {
             $set: {
                 votingOpen: false,
-                votingCompleted: true,
-                "reports.$.status": "under review"
+                votingCompleted: true
             }
         });
         console.log('closeVotingResult', result);

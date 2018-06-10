@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Progress} from 'reactstrap';
 import Spinner from 'react-spinkit';
+import PropTypes from 'prop-types';
 
 class ReportSummaryWidget extends Component {
 
@@ -23,6 +24,10 @@ class ReportSummaryWidget extends Component {
             </div>
         </div>
     }
+}
+
+ReportSummaryWidget.propTypes = {
+    reports: PropTypes.array.isRequired
 }
 
 export default ReportSummaryWidget;
